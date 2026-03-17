@@ -156,6 +156,8 @@
       &:hover { 
         color: var(--primary-color) !important;
         background: var(--surface-hover) !important;
+        
+        lucide-icon, i, span, * { color: var(--primary-color) !important; }
       }
 
       &.p-tab-active, &[aria-selected="true"], &.p-highlight {
@@ -163,7 +165,7 @@
         border-bottom: 3px solid var(--primary-color) !important;
         background: #ffffff !important;
         
-        lucide-icon, i { color: var(--primary-color) !important; }
+        lucide-icon, i, span, * { color: var(--primary-color) !important; }
       }
 
       lucide-icon, i {
@@ -173,10 +175,17 @@
       }
     }
 
-    .p-tabpanels, .p-tabpanel {
+    .p-tabpanels {
       background: #ffffff !important;
+      background-color: #ffffff !important;
       color: var(--text-color) !important;
       padding: 0 !important;
+      border: none !important;
+    }
+
+    .p-tabpanel, .p-tabpanel-content {
+      background: #ffffff !important;
+      background-color: #ffffff !important;
       border: none !important;
     }
   }
