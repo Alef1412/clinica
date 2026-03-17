@@ -19,6 +19,12 @@ const Patients: React.FC<PatientsProps> = ({ user }) => {
   const [newPatientName, setNewPatientName] = useState('');
   const [newPatientEmail, setNewPatientEmail] = useState('');
 
+  // Member Modal State
+  const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
+  const [newMemberName, setNewMemberName] = useState('');
+  const [newMemberEmail, setNewMemberEmail] = useState('');
+  const [newMemberRole, setNewMemberRole] = useState<UserRole>(UserRole.PROFESSIONAL);
+
   // Password Modal State
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [selectedUserForPassword, setSelectedUserForPassword] = useState<User | null>(null);
@@ -47,6 +53,18 @@ const Patients: React.FC<PatientsProps> = ({ user }) => {
       setIsRegisterModalOpen(false);
       setNewPatientName('');
       setNewPatientEmail('');
+      loadData();
+    }
+  };
+
+  const handleRegisterMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newMemberName && newMemberEmail) {
+      await dataService.createProfessional(newMemberName, newMemberEmail, newMemberRole);
+      setIsMemberModalOpen(false);
+      setNewMemberName('');
+      setNewMemberEmail('');
+      setNewMemberRole(UserRole.PROFESSIONAL);
       loadData();
     }
   };
@@ -133,6 +151,16 @@ const Patients: React.FC<PatientsProps> = ({ user }) => {
                 >
                     <Plus size={18} />
                     Novo Paciente
+                </button>
+            )}
+            
+            {viewRole === 'PROFESSIONALS' && isAdmin && (
+                <button 
+                    onClick={() => setIsMemberModalOpen(true)}
+                    className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl font-medium shadow-md shadow-primary-200 dark:shadow-none flex items-center justify-center gap-2 transition-all whitespace-nowrap"
+                >
+                    <Plus size={18} />
+                    Novo Membro
                 </button>
             )}
         </div>
@@ -260,6 +288,65 @@ const Patients: React.FC<PatientsProps> = ({ user }) => {
                   className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary-200 dark:shadow-none transition-all"
                 >
                   Cadastrar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Member Modal */}
+      {isMemberModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in-up border border-stone-200 dark:border-stone-700">
+            <div className="bg-primary-600 px-6 py-4 flex justify-between items-center">
+              <h3 className="text-white font-bold text-lg">Cadastrar Membro na Equipe</h3>
+              <button onClick={() => setIsMemberModalOpen(false)} className="text-white/80 hover:text-white">
+                <X size={20} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleRegisterMember} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">Nome Completo</label>
+                <input 
+                  type="text" 
+                  required
+                  className="w-full rounded-xl border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 p-2.5 outline-none border transition-colors"
+                  value={newMemberName}
+                  onChange={(e) => setNewMemberName(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">E-mail</label>
+                <input 
+                  type="email" 
+                  required
+                  className="w-full rounded-xl border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 p-2.5 outline-none border transition-colors"
+                  value={newMemberEmail}
+                  onChange={(e) => setNewMemberEmail(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">Perfil</label>
+                <select 
+                  className="w-full rounded-xl border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 p-2.5 outline-none border transition-colors"
+                  value={newMemberRole}
+                  onChange={(e) => setNewMemberRole(e.target.value as UserRole)}
+                >
+                  <option value={UserRole.PROFESSIONAL}>Profissional</option>
+                  <option value={UserRole.ADMIN}>Administrador</option>
+                </select>
+              </div>
+
+              <div className="pt-4">
+                <button 
+                  type="submit"
+                  className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-primary-200 dark:shadow-none transition-all"
+                >
+                  Cadastrar Membro
                 </button>
               </div>
             </form>

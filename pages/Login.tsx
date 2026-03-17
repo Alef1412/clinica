@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { authService } from '../services/mockDb';
-import { User } from '../types';
+import { User, UserRole } from '../types';
 import { Sparkles, Mail, Lock, Loader2, Info, Phone, User as UserIcon, MessageCircle } from 'lucide-react';
 
 interface LoginProps {
@@ -21,6 +21,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
+  const [regRole, setRegRole] = useState(UserRole.PATIENT);
   
   // Verification State
   const [showVerification, setShowVerification] = useState(false);
@@ -61,7 +62,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const isValid = await authService.verifyCode(verificationCode);
       
       if (isValid) {
-          const user = await authService.register(regName, regEmail, regPhone, regPassword);
+          const user = await authService.register(regName, regEmail, regPhone, regPassword, regRole);
           onLogin(user);
       } else {
           setError('Código inválido. Tente 1234.');
@@ -193,6 +194,26 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     <form onSubmit={handleRegisterSubmit} className="space-y-4 animate-fade-in">
                         <h1 className="text-2xl font-bold text-stone-800">Crie sua conta</h1>
                         <p className="text-stone-500 mb-4 text-sm">Preencha os dados abaixo.</p>
+
+                         <div>
+                            <label className="block text-sm font-medium text-stone-700 mb-2">Qual o seu perfil?</label>
+                            <div className="flex gap-3 mb-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setRegRole(UserRole.PATIENT)}
+                                    className={`flex-1 py-2 px-3 rounded-xl border font-medium text-sm transition-all ${regRole === UserRole.PATIENT ? 'bg-primary-50 border-primary-500 text-primary-700' : 'bg-stone-50 border-stone-200 text-stone-500 hover:bg-stone-100'}`}
+                                >
+                                    Sou Paciente
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setRegRole(UserRole.ADMIN)}
+                                    className={`flex-1 py-2 px-3 rounded-xl border font-medium text-sm transition-all ${regRole === UserRole.ADMIN ? 'bg-primary-50 border-primary-500 text-primary-700' : 'bg-stone-50 border-stone-200 text-stone-500 hover:bg-stone-100'}`}
+                                >
+                                    Clínica / Prof.
+                                </button>
+                            </div>
+                        </div>
 
                          <div>
                             <div className="relative">

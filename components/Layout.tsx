@@ -121,7 +121,7 @@ const Layout: React.FC<LayoutProps> = ({ children, user, onLogout, isDarkMode, t
           )}
 
           {(user.role === UserRole.ADMIN || user.role === UserRole.PROFESSIONAL) && (
-             <NavItem path="/patients" icon={Users} label="Pacientes" />
+             <NavItem path="/patients" icon={Users} label={user.role === UserRole.ADMIN ? "Usuários" : "Pacientes"} />
           )}
           
            {(user.role === UserRole.ADMIN || user.role === UserRole.PROFESSIONAL) && (

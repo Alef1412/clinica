@@ -123,16 +123,17 @@ export const authService = {
     });
   },
 
-  register: async (name: string, email: string, phone: string, password: string): Promise<User> => {
+  register: async (name: string, email: string, phone: string, password: string, role: UserRole = UserRole.PATIENT): Promise<User> => {
     const newUser: DBUser = {
       id: Math.random().toString(36).substr(2, 9),
       name,
       email,
       phoneNumber: phone,
       password,
-      role: UserRole.PATIENT,
+      role: role,
       anamnesisStatus: AnamnesisStatus.NONE,
-      color: '#10b981',
+      color: role === UserRole.PATIENT ? '#10b981' : '#ec4899', // Green for patient, pink for admin/prof
+      whatsappEnabled: role !== UserRole.PATIENT,
       avatar: undefined
     };
     MOCK_USERS.push(newUser);
@@ -302,6 +303,23 @@ export const dataService = {
       role: UserRole.PATIENT,
       anamnesisStatus: AnamnesisStatus.NONE,
       color: '#10b981',
+      avatar: undefined
+    };
+    MOCK_USERS.push(newUser);
+    const { password, ...safeUser } = newUser;
+    return Promise.resolve(safeUser);
+  },
+
+  createProfessional: async (name: string, email: string, role: UserRole, temporaryPassword: string = '123'): Promise<User> => {
+    const newUser: DBUser = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
+      email,
+      password: temporaryPassword,
+      role: role,
+      anamnesisStatus: AnamnesisStatus.NONE,
+      color: role === UserRole.ADMIN ? '#ec4899' : '#3b82f6',
+      whatsappEnabled: true,
       avatar: undefined
     };
     MOCK_USERS.push(newUser);
