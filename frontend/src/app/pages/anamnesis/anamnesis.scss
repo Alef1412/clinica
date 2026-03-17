@@ -94,17 +94,17 @@
 
 /* ─── Form Elements ─── */
 .modal-form-body {
-  background: #ffffff !important;
+  background: var(--surface-card) !important;
 }
 
-.tab-body { padding: 2rem; background: #ffffff !important; }
+.tab-body { padding: 2rem; background: var(--surface-card) !important; }
 
 .field-group { display: flex; flex-direction: column; }
 .field-label {
   display: flex; align-items: center;
   font-size: 0.75rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--stone-600) !important; margin-bottom: 8px;
+  color: var(--text-color-secondary) !important; margin-bottom: 8px;
 }
 
 .field-hint { font-size: 0.8125rem; color: var(--stone-400); margin: -4px 0 8px; }
@@ -112,12 +112,12 @@
 .field-textarea {
   width: 100%; border: 1.5px solid var(--surface-border);
   border-radius: 12px; padding: 12px 14px;
-  background-color: #ffffff !important; color: var(--text-color);
+  background-color: var(--surface-card) !important; color: var(--text-color);
   font-size: 0.9375rem; font-family: var(--font-family);
   resize: vertical; transition: all 0.2s;
-  &::placeholder { color: var(--stone-300); }
+  &::placeholder { color: var(--text-color-secondary); opacity: 0.5; }
   &:focus { 
-    outline: none; background-color: #ffffff !important;
+    outline: none; background-color: var(--surface-card) !important;
     border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1); 
   }
 }
@@ -134,16 +134,14 @@
     .p-tablist-content,
     .p-tabs-nav-container,
     .p-tabs-nav {
-      background: #ffffff !important;
-      background-color: #ffffff !important;
+      background: var(--surface-card) !important;
       border: none !important;
-      border-bottom: 2px solid var(--surface-border) !important;
+      border-bottom: 1px solid var(--surface-border) !important;
     }
 
     .p-tab {
-      background: #ffffff !important;
-      background-color: #ffffff !important;
-      color: var(--stone-500) !important;
+      background: var(--surface-card) !important;
+      color: var(--text-color-secondary) !important;
       border: none !important;
       border-bottom: 3px solid transparent !important;
       padding: 1rem 1.75rem !important;
@@ -163,7 +161,7 @@
       &.p-tab-active, &[aria-selected="true"], &.p-highlight {
         color: var(--primary-color) !important;
         border-bottom: 3px solid var(--primary-color) !important;
-        background: #ffffff !important;
+        background: transparent !important;
         
         lucide-icon, i, span, * { color: var(--primary-color) !important; }
       }
@@ -176,23 +174,23 @@
     }
 
     .p-tabpanels {
-      background: #ffffff !important;
-      background-color: #ffffff !important;
+      background: var(--surface-card) !important;
+      background-color: var(--surface-card) !important;
       color: var(--text-color) !important;
       padding: 0 !important;
       border: none !important;
     }
 
     .p-tabpanel, .p-tabpanel-content {
-      background: #ffffff !important;
-      background-color: #ffffff !important;
+      background: var(--surface-card) !important;
+      background-color: var(--surface-card) !important;
       border: none !important;
     }
   }
 
   /* PrimeNG Select inside Modal */
   .modal-card-premium .p-select {
-    background: #ffffff !important;
+    background: var(--surface-card) !important;
     border: 1.5px solid var(--surface-border) !important;
     border-radius: 12px !important;
     color: var(--text-color) !important;
@@ -207,7 +205,7 @@
 
   /* RadioButton Customization */
   .p-radiobutton .p-radiobutton-box {
-    background: #ffffff !important;
+    background: var(--surface-card) !important;
     border: 2px solid var(--stone-300) !important;
     border-radius: 50% !important;
   }
@@ -216,7 +214,7 @@
     background: var(--primary-color) !important;
   }
   .p-radiobutton .p-radiobutton-icon {
-    background: #ffffff !important;
+    background: var(--surface-card) !important;
   }
 }
 
