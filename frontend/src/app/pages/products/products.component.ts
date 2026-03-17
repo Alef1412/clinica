@@ -57,7 +57,7 @@ import { UserRole, Product } from '../../models/types';
       </div>
 
       <!-- Create Product Modal -->
-      <div *ngIf="isModalOpen()" class="modal-backdrop-premium d-flex align-items-center justify-content-center p-3" (click)="isModalOpen.set(false)">
+      <div *ngIf="isModalOpen()" class="modal-backdrop-premium d-flex align-items-center justify-content-center p-3 vh-100" (click)="isModalOpen.set(false)">
           <div class="modal-card-premium animate-fade-in" (click)="$event.stopPropagation()">
             <div class="modal-header-premium bg-primary d-flex justify-content-between align-items-center p-4">
               <h3 class="mb-0 text-white font-weight-bold">Novo Serviço</h3>
@@ -75,17 +75,17 @@ import { UserRole, Product } from '../../models/types';
               <div class="row g-3">
                  <div class="col-6">
                   <label class="form-label-premium">Preço Venda (R$)</label>
-                  <input type="number" name="price" [(ngModel)]="newData.price" required class="form-control-premium" />
+                  <input type="number" name="price" [(ngModel)]="newData.price" (ngModelChange)="sanitizeInput('price')" required class="form-control-premium" />
                 </div>
                  <div class="col-6">
                   <label class="form-label-premium">Custo (R$)</label>
-                  <input type="number" name="cost" [(ngModel)]="newData.cost" required class="form-control-premium" placeholder="0.00" />
+                  <input type="number" name="cost" [(ngModel)]="newData.cost" (ngModelChange)="sanitizeInput('cost')" required class="form-control-premium" placeholder="0.00" />
                 </div>
               </div>
 
                <div class="my-3">
                   <label class="form-label-premium">Duração (min)</label>
-                  <input type="number" name="dur" [(ngModel)]="newData.durationMin" required class="form-control-premium" />
+                  <input type="number" name="dur" [(ngModel)]="newData.durationMin" (ngModelChange)="sanitizeInput('durationMin')" required class="form-control-premium" />
                 </div>
 
               <div class="mb-4">
@@ -184,5 +184,13 @@ export class ProductsComponent implements OnInit {
     this.isModalOpen.set(false);
     this.newData = { name: '', price: 0, cost: 0, durationMin: 0, description: '' };
     this.loadProducts();
+  }
+
+  sanitizeInput(field: 'price' | 'cost' | 'durationMin') {
+    const val = this.newData[field];
+    if (val !== null && val !== undefined) {
+      // Convert to number to remove leading zeros, but keep it as a number for the model
+      this.newData[field] = Number(val);
+    }
   }
 }

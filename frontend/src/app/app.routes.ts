@@ -21,7 +21,7 @@ export const routes: Routes = [
       { path: 'schedule', component: ScheduleComponent },
       { path: 'financial', component: FinancialComponent },
       { path: 'products', component: ProductsComponent },
-      { path: 'anamnesis', component: AnamnesisComponent },
+      { path: 'anamnesis/:id', component: AnamnesisComponent },
       { path: 'settings', component: SettingsComponent },
     ]
   },
