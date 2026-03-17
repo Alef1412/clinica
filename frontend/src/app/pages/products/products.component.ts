@@ -155,10 +155,15 @@ import { UserRole, Product } from '../../models/types';
               <span class="profit-value">R$ {{ (newData.price - newData.cost) | number:'1.2-2':'pt-BR' }}</span>
             </div>
 
-            <button type="submit" class="btn btn-submit-premium w-100">
-              <lucide-icon name="save" size="16" class="me-2"></lucide-icon>
-              Salvar Serviço
-            </button>
+            <div class="modal-footer-premium d-flex gap-3 mt-2">
+              <button type="button" (click)="isModalOpen.set(false)" class="btn btn-cancel-premium flex-grow-1">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-submit-premium flex-grow-1">
+                <lucide-icon name="save" size="16" class="me-2"></lucide-icon>
+                Salvar Serviço
+              </button>
+            </div>
           </form>
         </div>
       </div>
@@ -198,7 +203,8 @@ import { UserRole, Product } from '../../models/types';
     .modal-backdrop-premium {
       position: fixed; inset: 0; background: rgba(12, 10, 9, 0.55);
       backdrop-filter: blur(10px); z-index: 1100;
-      display: flex; align-items: center; justify-content: center; padding: 1rem;
+      display: flex; align-items: center; justify-content: center; 
+      padding: 2rem; min-height: 100vh;
     }
     .modal-card-premium {
       background: var(--surface-card); width: 100%; max-width: 460px;
@@ -265,7 +271,7 @@ import { UserRole, Product } from '../../models/types';
     .profit-label { font-size: 0.8rem; font-weight: 600; color: #16a34a; }
     .profit-value { font-size: 0.9rem; font-weight: 800; color: #16a34a; }
 
-    /* ── Submit button ───────────────────────────── */
+    /* ── Action buttons ──────────────────────────── */
     .btn-submit-premium {
       background: var(--grad-primary); border: 0; border-radius: 14px; color: white;
       font-weight: 700; font-size: 0.9375rem; padding: 13px;
@@ -273,6 +279,14 @@ import { UserRole, Product } from '../../models/types';
       box-shadow: 0 4px 14px rgba(244, 63, 94, 0.25); transition: all 0.2s;
       &:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(244, 63, 94, 0.35); }
       &:active { transform: translateY(0); }
+    }
+
+    .btn-cancel-premium {
+      background: var(--surface-hover); border: 1px solid var(--surface-border);
+      border-radius: 14px; color: var(--text-color-secondary);
+      font-weight: 700; font-size: 0.9375rem; padding: 13px;
+      transition: all 0.2s;
+      &:hover { background: var(--surface-border); color: var(--text-color); }
     }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }

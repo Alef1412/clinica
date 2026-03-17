@@ -176,243 +176,245 @@
         </div>
       </div>
 
-      <!-- ─── PrimeNG Dialog Form ─── -->
-      <p-dialog
-        [(visible)]="dialogVisible"
-        [modal]="true"
-        [closable]="true"
-        [draggable]="false"
-        [resizable]="false"
-        styleClass="anamnesis-dialog"
-        [style]="{ width: '92vw', maxWidth: '880px' }"
-      >
-        <!-- Custom Header -->
-        <ng-template pTemplate="header">
-          <div class="dlg-header d-flex align-items-center gap-3 w-100">
-            <div class="dlg-icon-wrap d-flex align-items-center justify-content-center flex-shrink-0">
-              <i class="pi pi-file-edit" style="font-size:1.25rem; color:white"></i>
+      <!-- ─── Premium Modal Form ─── -->
+      <div *ngIf="dialogVisible" class="modal-backdrop-premium" (click)="dialogVisible = false">
+        <div class="modal-card-premium animate-fade-in" style="max-width: 880px;" (click)="$event.stopPropagation()">
+          
+          <!-- Header -->
+          <div class="modal-header-premium d-flex justify-content-between align-items-center px-4 py-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="modal-icon-box d-flex align-items-center justify-content-center">
+                <lucide-icon name="file-text" size="20"></lucide-icon>
+              </div>
+              <div>
+                <h5 class="mb-0 modal-title-text">Ficha de Anamnese</h5>
+                <p class="mb-0 modal-subtitle-text">Responda com atenção para a sua segurança</p>
+              </div>
             </div>
-            <div>
-              <h3 class="dlg-title mb-0">Ficha de Anamnese</h3>
-              <p class="dlg-subtitle mb-0">Responda com atenção para garantir a segurança do seu procedimento</p>
-            </div>
+            <button (click)="dialogVisible = false" class="btn-close-modal border-0 bg-transparent">
+              <lucide-icon name="x" size="18"></lucide-icon>
+            </button>
           </div>
-        </ng-template>
 
-        <!-- Form body with Tabs -->
-        <form id="anamnesisForm" (submit)="handleSubmit($event)">
-          <p-tabs [(value)]="activeTab" styleClass="anamnesis-tabs">
+          <div class="modal-divider"></div>
 
-            <p-tablist>
-              <p-tab value="0"><i class="pi pi-user me-2"></i>Dados Pessoais</p-tab>
-              <p-tab value="1"><i class="pi pi-heart me-2"></i>Histórico de Saúde</p-tab>
-              <p-tab value="2"><i class="pi pi-comment me-2"></i>Observações</p-tab>
-            </p-tablist>
+          <!-- Form body with Tabs -->
+          <form id="anamnesisForm" (submit)="handleSubmit($event)" class="modal-form-body">
+            <p-tabs [(value)]="activeTab" styleClass="anamnesis-tabs">
 
-            <p-tabpanels>
+              <p-tablist>
+                <p-tab value="0">
+                  <lucide-icon name="user" size="14" class="me-2"></lucide-icon>
+                  Dados Pessoais
+                </p-tab>
+                <p-tab value="1">
+                  <lucide-icon name="activity" size="14" class="me-2"></lucide-icon>
+                  Histórico de Saúde
+                </p-tab>
+                <p-tab value="2">
+                  <lucide-icon name="clipboard" size="14" class="me-2"></lucide-icon>
+                  Observações
+                </p-tab>
+              </p-tablist>
 
-              <!-- ── TAB 1 · Dados Pessoais ── -->
-              <p-tabpanel value="0">
-                <div class="tab-body">
-                  <div class="row g-4">
+              <p-tabpanels>
 
-                    <!-- Tipo Sanguíneo -->
-                    <div class="col-12 col-sm-6">
-                      <div class="field-group">
-                        <label class="field-label" for="bloodType">
-                          <i class="pi pi-heart-fill me-1 field-label-icon" style="color:var(--primary-color)"></i>
-                          Tipo Sanguíneo
-                        </label>
-                        <p-select
-                          inputId="bloodType"
-                          name="blood"
-                          [(ngModel)]="localFormData.bloodType"
-                          [options]="bloodTypeOptions"
-                          optionLabel="label"
-                          optionValue="value"
-                          placeholder="Selecione..."
-                          styleClass="w-100"
-                        />
+                <!-- ── TAB 1 · Dados Pessoais ── -->
+                <p-tabpanel value="0">
+                  <div class="tab-body p-4">
+                    <div class="row g-4">
+
+                      <!-- Tipo Sanguíneo -->
+                      <div class="col-12 col-sm-6">
+                        <div class="field-group">
+                          <label class="field-label" for="bloodType">
+                            <lucide-icon name="heart" size="12" class="me-1 field-label-icon" style="color:var(--primary-color)"></lucide-icon>
+                            Tipo Sanguíneo
+                          </label>
+                          <p-select
+                            inputId="bloodType"
+                            name="blood"
+                            [(ngModel)]="localFormData.bloodType"
+                            [options]="bloodTypeOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Selecione..."
+                            styleClass="w-100"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <!-- Tipo de Pele -->
-                    <div class="col-12 col-sm-6">
-                      <div class="field-group">
-                        <label class="field-label" for="skinType">
-                          <i class="pi pi-sparkles me-1 field-label-icon" style="color:var(--secondary-color)"></i>
-                          Tipo de Pele
-                        </label>
-                        <p-select
-                          inputId="skinType"
-                          name="skin"
-                          [(ngModel)]="localFormData.skinType"
-                          [options]="skinTypeOptions"
-                          optionLabel="label"
-                          optionValue="value"
-                          placeholder="Selecione..."
-                          styleClass="w-100"
-                        />
+                      <!-- Tipo de Pele -->
+                      <div class="col-12 col-sm-6">
+                        <div class="field-group">
+                          <label class="field-label" for="skinType">
+                            <lucide-icon name="sparkles" size="12" class="me-1 field-label-icon" style="color:var(--secondary-color)"></lucide-icon>
+                            Tipo de Pele
+                          </label>
+                          <p-select
+                            inputId="skinType"
+                            name="skin"
+                            [(ngModel)]="localFormData.skinType"
+                            [options]="skinTypeOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Selecione..."
+                            styleClass="w-100"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <!-- Exposição Solar -->
-                    <div class="col-12 col-sm-6">
-                      <div class="field-group">
-                        <label class="field-label" for="sunExposure">
-                          <i class="pi pi-sun me-1 field-label-icon" style="color:#f59e0b"></i>
-                          Exposição Solar
-                        </label>
-                        <p-select
-                          inputId="sunExposure"
-                          name="sun"
-                          [(ngModel)]="localFormData.sunExposure"
-                          [options]="sunExposureOptions"
-                          optionLabel="label"
-                          optionValue="value"
-                          placeholder="Selecione..."
-                          styleClass="w-100"
-                        />
+                      <!-- Exposição Solar -->
+                      <div class="col-12 col-sm-6">
+                        <div class="field-group">
+                          <label class="field-label" for="sunExposure">
+                            <lucide-icon name="sun" size="12" class="me-1 field-label-icon" style="color:#f59e0b"></lucide-icon>
+                            Exposição Solar
+                          </label>
+                          <p-select
+                            inputId="sunExposure"
+                            name="sun"
+                            [(ngModel)]="localFormData.sunExposure"
+                            [options]="sunExposureOptions"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Selecione..."
+                            styleClass="w-100"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <!-- Fumante -->
-                    <div class="col-12 col-sm-6">
-                      <div class="field-group">
-                        <label class="field-label d-block mb-3">
-                          <i class="pi pi-ban me-1 field-label-icon" style="color:var(--stone-500)"></i>
-                          Você é fumante?
-                        </label>
-                        <div class="radio-group d-flex gap-4">
-                          <div class="radio-option d-flex align-items-center gap-2">
-                            <p-radioButton name="smoker" [value]="true"  [(ngModel)]="localFormData.smoker" inputId="smokerYes" />
-                            <label for="smokerYes" class="radio-label">Sim</label>
-                          </div>
-                          <div class="radio-option d-flex align-items-center gap-2">
-                            <p-radioButton name="smoker" [value]="false" [(ngModel)]="localFormData.smoker" inputId="smokerNo" />
-                            <label for="smokerNo"  class="radio-label">Não</label>
+                      <!-- Fumante -->
+                      <div class="col-12 col-sm-6">
+                        <div class="field-group">
+                          <label class="field-label d-block mb-3">
+                            <lucide-icon name="x-circle" size="12" class="me-1 field-label-icon" style="color:var(--stone-500)"></lucide-icon>
+                            Você é fumante?
+                          </label>
+                          <div class="radio-group d-flex gap-4">
+                            <div class="radio-option d-flex align-items-center gap-2">
+                              <p-radioButton name="smoker" [value]="true"  [(ngModel)]="localFormData.smoker" inputId="smokerYes" />
+                              <label for="smokerYes" class="radio-label">Sim</label>
+                            </div>
+                            <div class="radio-option d-flex align-items-center gap-2">
+                              <p-radioButton name="smoker" [value]="false" [(ngModel)]="localFormData.smoker" inputId="smokerNo" />
+                              <label for="smokerNo"  class="radio-label">Não</label>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
+                    </div>
                   </div>
-                </div>
-              </p-tabpanel>
+                </p-tabpanel>
 
-              <!-- ── TAB 2 · Histórico de Saúde ── -->
-              <p-tabpanel value="1">
-                <div class="tab-body">
-                  <div class="row g-4">
+                <!-- ── TAB 2 · Histórico de Saúde ── -->
+                <p-tabpanel value="1">
+                  <div class="tab-body p-4">
+                    <div class="row g-4">
 
-                    <div class="col-12 col-lg-6">
-                      <div class="field-group">
-                        <label class="field-label" for="allergies">
-                          <i class="pi pi-exclamation-triangle me-1 field-label-icon" style="color:#ef4444"></i>
-                          Alergias
-                        </label>
-                        <p class="field-hint">Medicamentos, alimentos ou substâncias</p>
-                        <textarea
-                          id="allergies"
-                          name="allergies"
-                          [(ngModel)]="localFormData.allergies"
-                          rows="4"
-                          placeholder="Ex: dipirona, amendoim..."
-                          class="field-textarea"
-                        ></textarea>
+                      <div class="col-12 col-lg-6">
+                        <div class="field-group">
+                          <label class="field-label" for="allergies">
+                            <lucide-icon name="alert-circle" size="12" class="me-1 field-label-icon" style="color:#ef4444"></lucide-icon>
+                            Alergias
+                          </label>
+                          <p class="field-hint">Medicamentos, alimentos ou substâncias</p>
+                          <textarea
+                            id="allergies"
+                            name="allergies"
+                            [(ngModel)]="localFormData.allergies"
+                            rows="4"
+                            placeholder="Ex: dipirona, amendoim..."
+                            class="field-textarea"
+                          ></textarea>
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="col-12 col-lg-6">
-                      <div class="field-group">
-                        <label class="field-label" for="medications">
-                          <i class="pi pi-tablets me-1 field-label-icon" style="color:#f59e0b"></i>
-                          Medicamentos em Uso Contínuo
-                        </label>
-                        <p class="field-hint">Liste todos que usa regularmente</p>
-                        <textarea
-                          id="medications"
-                          name="meds"
-                          [(ngModel)]="localFormData.medications"
-                          rows="4"
-                          placeholder="Ex: Losartana 50mg..."
-                          class="field-textarea"
-                        ></textarea>
+                      <div class="col-12 col-lg-6">
+                        <div class="field-group">
+                          <label class="field-label" for="medications">
+                            <lucide-icon name="activity" size="12" class="me-1 field-label-icon" style="color:#f59e0b"></lucide-icon>
+                            Medicamentos em Uso Contínuo
+                          </label>
+                          <p class="field-hint">Liste todos que usa regularmente</p>
+                          <textarea
+                            id="medications"
+                            name="meds"
+                            [(ngModel)]="localFormData.medications"
+                            rows="4"
+                            placeholder="Ex: Losartana 50mg..."
+                            class="field-textarea"
+                          ></textarea>
+                        </div>
                       </div>
-                    </div>
 
-                    <div class="col-12">
-                      <div class="field-group">
-                        <label class="field-label" for="surgeries">
-                          <i class="pi pi-shield me-1 field-label-icon" style="color:#3b82f6"></i>
-                          Cirurgias Anteriores
-                        </label>
-                        <textarea
-                          id="surgeries"
-                          name="surgeries"
-                          [(ngModel)]="localFormData.surgeries"
-                          rows="3"
-                          placeholder="Ex: Apendicectomia (2015)..."
-                          class="field-textarea"
-                        ></textarea>
+                      <div class="col-12">
+                        <div class="field-group">
+                          <label class="field-label" for="surgeries">
+                            <lucide-icon name="shield" size="12" class="me-1 field-label-icon" style="color:#3b82f6"></lucide-icon>
+                            Cirurgias Anteriores
+                          </label>
+                          <textarea
+                            id="surgeries"
+                            name="surgeries"
+                            [(ngModel)]="localFormData.surgeries"
+                            rows="3"
+                            placeholder="Ex: Apendicectomia (2015)..."
+                            class="field-textarea"
+                          ></textarea>
+                        </div>
                       </div>
-                    </div>
 
+                    </div>
                   </div>
-                </div>
-              </p-tabpanel>
+                </p-tabpanel>
 
-              <!-- ── TAB 3 · Observações ── -->
-              <p-tabpanel value="2">
-                <div class="tab-body">
-                  <div class="field-group">
-                    <label class="field-label" for="notes">
-                      <i class="pi pi-comment me-1 field-label-icon" style="color:var(--accent-color)"></i>
-                      Observações Adicionais
-                    </label>
-                    <p class="field-hint mb-3">Qualquer informação que considere relevante</p>
-                    <textarea
-                      id="notes"
-                      name="notes"
-                      [(ngModel)]="localFormData.notes"
-                      rows="8"
-                      placeholder="Escreva aqui..."
-                      class="field-textarea"
-                    ></textarea>
+                <!-- ── TAB 3 · Observações ── -->
+                <p-tabpanel value="2">
+                  <div class="tab-body p-4">
+                    <div class="field-group">
+                      <label class="field-label" for="notes">
+                        <lucide-icon name="clipboard" size="12" class="me-1 field-label-icon" style="color:var(--accent-color)"></lucide-icon>
+                        Observações Adicionais
+                      </label>
+                      <p class="field-hint mb-3">Qualquer informação que considere relevante</p>
+                      <textarea
+                        id="notes"
+                        name="notes"
+                        [(ngModel)]="localFormData.notes"
+                        rows="8"
+                        placeholder="Escreva aqui..."
+                        class="field-textarea"
+                      ></textarea>
+                    </div>
                   </div>
-                </div>
-              </p-tabpanel>
+                </p-tabpanel>
 
-            </p-tabpanels>
-          </p-tabs>
-        </form>
+              </p-tabpanels>
+            </p-tabs>
 
-        <!-- Footer -->
-        <ng-template pTemplate="footer">
-          <div class="dlg-footer d-flex align-items-center justify-content-between gap-3">
-            <p class="dlg-footer-hint mb-0">
-              <i class="pi pi-lock me-1"></i>
-              Seus dados são protegidos e confidenciais.
-            </p>
-            <div class="d-flex gap-2">
-              <p-button
-                type="button"
-                label="Cancelar"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="dialogVisible = false"
-              />
-              <p-button
-                type="submit"
-                form="anamnesisForm"
-                label="Enviar Ficha"
-                icon="pi pi-send"
-                styleClass="btn-lumina-primary"
-              />
+            <div class="modal-divider mt-2"></div>
+
+            <!-- Footer -->
+            <div class="dlg-footer d-flex align-items-center justify-content-between gap-3 p-4">
+              <p class="dlg-footer-hint mb-0 d-none d-md-flex align-items-center">
+                <lucide-icon name="lock" size="14" class="me-2"></lucide-icon>
+                Seus dados são protegidos e confidenciais.
+              </p>
+              <div class="d-flex gap-3 flex-grow-1 flex-md-grow-0">
+                <button type="button" (click)="dialogVisible = false" class="btn btn-cancel-premium px-4">
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-submit-premium px-4">
+                  <lucide-icon name="send" size="16" class="me-2"></lucide-icon>
+                  Enviar Ficha
+                </button>
+              </div>
             </div>
-          </div>
-        </ng-template>
-      </p-dialog>
+          </form>
+        </div>
+      </div>
 
     </ng-container>
   </ng-container>

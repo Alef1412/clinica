@@ -68,7 +68,8 @@ import {
     Receipt,
     PackagePlus,
     Loader2,
-    TrendingUp
+    TrendingUp,
+    Send
 } from 'lucide-angular';
 
 registerLocaleData(localePt);
@@ -92,7 +93,7 @@ export const appConfig: ApplicationConfig = {
         ChevronRight, ChevronLeft, Filter, MoreHorizontal, MoreVertical, Download, Upload, Video, Bell, Shield,
         Eye, EyeOff, Save, Trash2, Heart, Stethoscope, Phone, MapPin, Info, ArrowRight, ArrowLeft, PlusCircle, XCircle,
         Copy, Share2, FileSearch, Sticker, Clipboard, Zap,
-        Tag, Banknote, Receipt, PackagePlus, Loader2, TrendingUp
+        Tag, Banknote, Receipt, PackagePlus, Loader2, TrendingUp, Send
     }))
   ]
 };

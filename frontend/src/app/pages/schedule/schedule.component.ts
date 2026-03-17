@@ -161,34 +161,76 @@ import { UserRole, Appointment, Product, AppointmentStatus } from '../../models/
           </div>
       </div>
 
-       <!-- Booking Modal Simplified -->
-       <div *ngIf="isModalOpen()" class="modal-backdrop-premium d-flex align-items-center justify-content-center p-3" (click)="isModalOpen.set(false)">
+       <!-- Booking Modal Premium -->
+       <div *ngIf="isModalOpen()" class="modal-backdrop-premium" (click)="isModalOpen.set(false)">
           <div class="modal-card-premium animate-fade-in" (click)="$event.stopPropagation()">
-            <div class="modal-header-premium bg-primary d-flex justify-content-between align-items-center p-4">
-              <h3 class="mb-0 text-white font-weight-bold">Novo Agendamento</h3>
-              <button (click)="isModalOpen.set(false)" class="btn-close-modal border-0 bg-transparent text-white">
-                <lucide-icon name="x" size="20"></lucide-icon>
+            
+            <!-- Header -->
+            <div class="modal-header-premium d-flex justify-content-between align-items-center px-4 py-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="modal-icon-box d-flex align-items-center justify-content-center">
+                  <lucide-icon name="calendar-plus" size="20"></lucide-icon>
+                </div>
+                <div>
+                  <h5 class="mb-0 modal-title-text">Novo Agendamento</h5>
+                  <p class="mb-0 modal-subtitle-text">Defina o procedimento e horário</p>
+                </div>
+              </div>
+              <button (click)="isModalOpen.set(false)" class="btn-close-modal border-0 bg-transparent">
+                <lucide-icon name="x" size="18"></lucide-icon>
               </button>
             </div>
-            <form (submit)="handleBook($event)" class="p-4">
-               <div class="mb-3">
-                  <label class="form-label-premium">Procedimento</label>
+
+            <div class="modal-divider"></div>
+
+            <form (submit)="handleBook($event)" class="px-4 pb-4 pt-3">
+               <!-- Procedimento -->
+               <div class="form-group-premium mb-3">
+                  <label class="form-label-premium">
+                    <lucide-icon name="activity" size="12" class="me-1"></lucide-icon>
+                    Procedimento
+                  </label>
                   <select name="svc" [(ngModel)]="bookingData.serviceId" class="form-select-premium" required>
-                     <option value="">Selecione...</option>
-                     <option *ngFor="let s of services()" [value]="s.id">{{ s.name }} - R$ {{ s.price }}</option>
+                     <option value="">Selecione um serviço...</option>
+                     <option *ngFor="let s of services()" [value]="s.id">
+                        {{ s.name }} — R$ {{ s.price | number:'1.2-2':'pt-BR' }}
+                     </option>
                   </select>
                </div>
-               <div class="row g-3">
+
+               <!-- Data e Hora -->
+               <div class="row g-3 mb-4">
                   <div class="col-6">
-                    <label class="form-label-premium">Data</label>
-                    <input type="date" name="date" [(ngModel)]="bookingData.date" class="form-control-premium" required />
+                    <label class="form-label-premium">
+                      <lucide-icon name="calendar" size="12" class="me-1"></lucide-icon>
+                      Data
+                    </label>
+                    <div class="input-with-icon-premium">
+                      <input type="date" name="date" [(ngModel)]="bookingData.date" 
+                        class="form-control-premium" required />
+                    </div>
                   </div>
                   <div class="col-6">
-                    <label class="form-label-premium">Hora</label>
-                    <input type="time" name="time" [(ngModel)]="bookingData.time" class="form-control-premium" required />
+                    <label class="form-label-premium">
+                      <lucide-icon name="clock" size="12" class="me-1"></lucide-icon>
+                      Hora
+                    </label>
+                    <div class="input-with-icon-premium">
+                      <input type="time" name="time" [(ngModel)]="bookingData.time" 
+                        class="form-control-premium" required />
+                    </div>
                   </div>
                </div>
-               <button type="submit" class="btn btn-primary-premium w-100 py-3 mt-4">Confirmar Agendamento</button>
+
+               <!-- Rodapé com botões de ação -->
+               <div class="d-flex gap-3">
+                 <button type="button" (click)="isModalOpen.set(false)" class="btn btn-cancel-premium flex-grow-1">
+                   Cancelar
+                 </button>
+                 <button type="submit" class="btn btn-submit-premium flex-grow-1">
+                   Confirmar
+                 </button>
+               </div>
             </form>
           </div>
        </div>
@@ -255,25 +297,74 @@ import { UserRole, Appointment, Product, AppointmentStatus } from '../../models/
     .event-subtitle { font-size: 0.625rem; opacity: 0.8; }
     .gcal-tiny-icon { width: 12px; height: 12px; }
 
-    /* Modals */
-    .modal-backdrop-premium { position: fixed; inset: 0; background: rgba(12, 10, 9, 0.4); backdrop-filter: blur(8px); z-index: 1100; }
-    .modal-card-premium { background: var(--surface-card); width: 100%; max-width: 440px; border-radius: 1.5rem; overflow: hidden; box-shadow: var(--shadow-lg); &.small { max-width: 380px; } }
-    .modal-header-premium { &.bg-primary { background: var(--primary-color); } }
-    .btn-close-modal { opacity: 0.8; &:hover { opacity: 1; } }
+    /* ── Modal Premium Styling ────────────────────── */
+    .modal-backdrop-premium {
+      position: fixed; inset: 0; background: rgba(12, 10, 9, 0.55);
+      backdrop-filter: blur(10px); z-index: 1100;
+      display: flex; align-items: center; justify-content: center; 
+      padding: 2rem; min-height: 100vh;
+    }
+    .modal-card-premium {
+      background: var(--surface-card); width: 100%; max-width: 460px;
+      border-radius: 1.75rem; overflow: hidden; box-shadow: var(--shadow-lg);
+      &.small { max-width: 380px; }
+    }
+
+    .modal-header-premium { background: var(--surface-card); padding-top: 1.25rem !important; padding-bottom: 1.25rem !important; }
+    .modal-icon-box {
+      width: 44px; height: 44px; background: var(--primary-light); color: var(--primary-color);
+      border-radius: 14px; flex-shrink: 0;
+    }
+    .modal-title-text { font-size: 1.0625rem; font-weight: 800; color: var(--text-color); }
+    .modal-subtitle-text { font-size: 0.75rem; color: var(--text-color-secondary); }
+    .modal-divider { height: 1px; background: var(--surface-border); }
+
+    .btn-close-modal {
+      width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: var(--text-color-secondary); transition: all 0.2s;
+      &:hover { background: var(--surface-hover); color: var(--text-color); }
+    }
+
+    /* ── Labels & Inputs ─────────────────────────── */
+    .form-label-premium {
+      font-size: 0.75rem; font-weight: 700; color: var(--text-color-secondary);
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;
+      display: flex; align-items: center;
+    }
+    .form-control-premium, .form-select-premium {
+      width: 100%; border-radius: 12px; padding: 10px 14px;
+      border: 1.5px solid var(--surface-border); background: var(--surface-ground);
+      color: var(--text-color); font-size: 0.9375rem; transition: all 0.2s;
+      &:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12); outline: none; background: var(--surface-card); }
+    }
+
+    /* ── Action buttons ──────────────────────────── */
+    .btn-submit-premium {
+      background: var(--grad-primary); border: 0; border-radius: 14px; color: white;
+      font-weight: 700; font-size: 0.9375rem; padding: 13px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.25); transition: all 0.2s;
+      &:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(244, 63, 94, 0.35); }
+    }
+
+    .btn-cancel-premium {
+      background: var(--surface-hover); border: 1px solid var(--surface-border);
+      border-radius: 14px; color: var(--text-color-secondary);
+      font-weight: 700; font-size: 0.9375rem; padding: 13px;
+      transition: all 0.2s;
+      &:hover { background: var(--surface-border); color: var(--text-color); }
+    }
 
     .event-detail-title { font-size: 1.25rem; font-weight: 800; color: var(--text-color); }
     .event-detail-time { font-size: 0.875rem; color: var(--text-color-secondary); font-weight: 600; }
     .btn-cancel-appointment { background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; font-weight: 700; border-radius: 12px; &:hover { background: #fee2e2; } }
 
-    .form-label-premium { font-size: 0.8125rem; font-weight: 700; color: var(--text-color-secondary); margin-bottom: 6px; text-transform: uppercase; }
-    .form-control-premium, .form-select-premium { border-radius: 12px; padding: 12px; border: 1px solid var(--surface-border); background: var(--surface-hover); color: var(--text-color); font-size: 0.9375rem; &:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1); outline: none; } }
-
     .mini-calendar-popup { position: absolute; top: 100%; left: 0; background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 12px; z-index: 1050; width: 260px; margin-top: 8px; }
     .popup-month-title { font-size: 0.875rem; font-weight: 800; color: var(--text-color); }
     .popup-placeholder { font-size: 0.75rem; color: var(--text-color-tertiary); font-style: italic; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
   `]
 })
 export class ScheduleComponent implements OnInit {
