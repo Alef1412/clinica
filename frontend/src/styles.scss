@@ -1,44 +1,100 @@
-/* Global variables */
+/* Lumina Theme Design System */
 :root {
-  --primary-color: #ec4899;
-  --primary-color-text: #ffffff;
-  --secondary-color: #3b82f6;
-  --accent-color: #10b981;
-  --surface-ground: #f8fafc;
+  /* Colors - Rose & Amber Palette */
+  --primary-color: #f43f5e; /* Rose 500 */
+  --primary-hover: #e11d48; /* Rose 600 */
+  --primary-light: #fff1f2; /* Rose 50 */
+  
+  --secondary-color: #f59e0b; /* Amber 500 */
+  --secondary-hover: #d97706; /* Amber 600 */
+  
+  --accent-color: #8b5cf6; /* Violet 500 */
+  
+  /* Stone Neutrals (Custom) */
+  --stone-50: #fafaf9;
+  --stone-100: #f5f5f4;
+  --stone-200: #e7e5e4;
+  --stone-300: #d6d3d1;
+  --stone-400: #a8a29e;
+  --stone-500: #78716c;
+  --stone-600: #57534e;
+  --stone-700: #44403c;
+  --stone-800: #292524;
+  --stone-900: #1c1917;
+  --stone-950: #0c0a09;
+
+  /* Semantic Surfaces */
+  --surface-ground: var(--stone-50);
   --surface-section: #ffffff;
   --surface-card: #ffffff;
-  --surface-overlay: #ffffff;
-  --surface-border: #dfe7ef;
-  --surface-hover: #f1f5f9;
+  --surface-border: var(--stone-200);
+  --surface-hover: var(--stone-100);
   
+  /* Text Colors */
+  --text-color: var(--stone-800);
+  --text-color-secondary: var(--stone-500);
+  
+  /* Gradients */
+  --grad-primary: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+  --grad-premium: linear-gradient(135deg, #f43f5e 0%, #8b5cf6 100%);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
   --font-family: 'Roboto Flex', sans-serif;
   
-  --text-color: #334155;
-  --text-color-secondary: #64748b;
-  
-  /* Bootstrap Overrides/Compatibility */
+  /* Bootstrap Compatibility */
   --bs-primary: var(--primary-color);
-  --bs-font-sans-serif: var(--font-family);
+  --bs-body-bg: var(--surface-ground);
+  --bs-body-font-family: var(--font-family);
+}
+
+/* Dark Mode Overrides */
+.dark {
+  --surface-ground: var(--stone-950);
+  --surface-section: var(--stone-900);
+  --surface-card: var(--stone-900);
+  --surface-border: var(--stone-800);
+  --surface-hover: var(--stone-800);
+  
+  --text-color: var(--stone-100);
+  --text-color-secondary: var(--stone-400);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
 }
 
 @import "bootstrap/scss/bootstrap";
 @import "primeicons/primeicons.css";
 
-/* Reset and Base Styles */
-* {
-  box-sizing: border-box;
-}
-
+/* Base Overrides */
 body {
   margin: 0;
   font-family: var(--font-family);
   background-color: var(--surface-ground);
   color: var(--text-color);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  color: var(--text-color);
+.card-premium {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

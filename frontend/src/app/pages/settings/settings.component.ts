@@ -10,112 +10,115 @@ import { User, UserRole } from '../../models/types';
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule],
   template: `
-    <div class="max-w-4xl mx-auto space-y-6 animate-fade-in">
-      <div>
-        <h2 class="text-2xl font-bold text-stone-800 dark:text-white">Configurações da Conta</h2>
-        <p class="text-stone-500 dark:text-stone-400">Gerencie seus dados pessoais e preferências.</p>
+    <div class="settings-wrapper mx-auto animate-fade-in">
+      <div class="mb-4">
+        <h2 class="section-title mb-1">Configurações da Conta</h2>
+        <p class="section-subtitle mb-0">Gerencie seus dados pessoais e preferências.</p>
       </div>
 
-      <div class="flex flex-col md:flex-row gap-6">
+      <div class="row g-4">
         <!-- Sidebar Tabs -->
-        <div class="w-full md:w-64 flex flex-col gap-2">
-            <button 
-                (click)="activeTab.set('PROFILE'); msg.set(null)"
-                [class.active-tab]="activeTab() === 'PROFILE'"
-                class="tab-btn"
-            >
-                <lucide-icon name="user" size="18"></lucide-icon> Meu Perfil
-            </button>
-            <button 
-                (click)="activeTab.set('SECURITY'); msg.set(null)"
-                [class.active-tab]="activeTab() === 'SECURITY'"
-                class="tab-btn"
-            >
-                <lucide-icon name="lock" size="18"></lucide-icon> Segurança
-            </button>
-            <button *ngIf="userRole() !== 'PATIENT'"
-                (click)="activeTab.set('NOTIFICATIONS'); msg.set(null)"
-                [class.active-tab]="activeTab() === 'NOTIFICATIONS'"
-                class="tab-btn"
-            >
-                <lucide-icon name="bell" size="18"></lucide-icon> Notificações
-            </button>
+        <div class="col-12 col-md-4 col-lg-3">
+            <div class="settings-sidebar d-flex flex-column gap-2">
+                <button 
+                    (click)="activeTab.set('PROFILE'); msg.set(null)"
+                    class="btn-tab-settings d-flex align-items-center gap-3 w-100 border-0"
+                    [class.active]="activeTab() === 'PROFILE'"
+                >
+                    <lucide-icon name="user" size="18"></lucide-icon> Meu Perfil
+                </button>
+                <button 
+                    (click)="activeTab.set('SECURITY'); msg.set(null)"
+                    class="btn-tab-settings d-flex align-items-center gap-3 w-100 border-0"
+                    [class.active]="activeTab() === 'SECURITY'"
+                >
+                    <lucide-icon name="lock" size="18"></lucide-icon> Segurança
+                </button>
+                <button *ngIf="userRole() !== 'PATIENT'"
+                    (click)="activeTab.set('NOTIFICATIONS'); msg.set(null)"
+                    class="btn-tab-settings d-flex align-items-center gap-3 w-100 border-0"
+                    [class.active]="activeTab() === 'NOTIFICATIONS'"
+                >
+                    <lucide-icon name="bell" size="18"></lucide-icon> Notificações
+                </button>
+            </div>
         </div>
 
         <!-- Content Area -->
-        <div class="flex-1 bg-white dark:bg-stone-900 p-8 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-800">
-            <div *ngIf="msg()" class="mb-6 p-4 rounded-xl flex items-center gap-2 text-sm font-medium" 
-                 [ngClass]="msg()?.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'">
-                <lucide-icon [name]="msg()?.type === 'success' ? 'check' : 'alert-circle'" size="16"></lucide-icon>
-                {{ msg()?.text }}
-            </div>
-
-            <!-- Profile Form -->
-            <form *ngIf="activeTab() === 'PROFILE'" (submit)="handleProfileUpdate($event)" class="space-y-4 animate-fade-in">
-                <h3 class="text-lg font-bold text-stone-800 dark:text-white mb-4">Dados Pessoais</h3>
-                
-                <div>
-                    <label class="form-label">Nome Completo</label>
-                    <input type="text" name="name" [(ngModel)]="profileData.name" class="form-input" required />
-                </div>
-                <div>
-                    <label class="form-label">E-mail</label>
-                    <input type="email" name="email" [(ngModel)]="profileData.email" class="form-input" required />
-                </div>
-                <div>
-                    <label class="form-label">WhatsApp / Telefone</label>
-                    <input type="tel" name="phone" [(ngModel)]="profileData.phoneNumber" class="form-input" placeholder="(00) 00000-0000" />
+        <div class="col-12 col-md-8 col-lg-9">
+            <div class="settings-content shadow-sm p-4 p-md-5">
+                <div *ngIf="msg()" class="alert-premium mb-4 d-flex align-items-center gap-2" 
+                     [ngClass]="msg()?.type === 'success' ? 'success' : 'error'">
+                    <lucide-icon [name]="msg()?.type === 'success' ? 'check' : 'alert-circle'" size="16"></lucide-icon>
+                    {{ msg()?.text }}
                 </div>
 
-                <div class="pt-4">
-                    <button type="submit" [disabled]="loading()" class="btn-primary animate-hover">
-                        <lucide-icon name="save" size="18"></lucide-icon> Salvar Alterações
-                    </button>
-                </div>
-            </form>
-
-            <!-- Security Form -->
-            <form *ngIf="activeTab() === 'SECURITY'" (submit)="handlePasswordUpdate($event)" class="space-y-4 animate-fade-in">
-                <h3 class="text-lg font-bold text-stone-800 dark:text-white mb-4">Alterar Senha</h3>
-                
-                <div>
-                    <label class="form-label">Senha Atual</label>
-                    <input type="password" name="curr" [(ngModel)]="passData.current" class="form-input" required />
-                </div>
-                <div>
-                    <label class="form-label">Nova Senha</label>
-                    <input type="password" name="new" [(ngModel)]="passData.new" class="form-input" required />
-                </div>
-                <div>
-                    <label class="form-label">Confirmar Nova Senha</label>
-                    <input type="password" name="conf" [(ngModel)]="passData.confirm" class="form-input" required />
-                </div>
-
-                <div class="pt-4">
-                    <button type="submit" [disabled]="loading()" class="btn-dark animate-hover">
-                        <lucide-icon name="lock" size="18"></lucide-icon> Atualizar Senha
-                    </button>
-                </div>
-            </form>
-
-            <!-- Notifications -->
-            <div *ngIf="activeTab() === 'NOTIFICATIONS'" class="space-y-6 animate-fade-in">
-                <h3 class="text-lg font-bold text-stone-800 dark:text-white mb-4">Automação de Mensagens</h3>
-                
-                <div class="flex items-start gap-4 p-4 border border-stone-100 dark:border-stone-800 rounded-xl bg-stone-50 dark:bg-stone-800/50">
-                    <div class="bg-green-100 text-green-600 p-2 rounded-lg">
-                        <lucide-icon name="bell" size="24"></lucide-icon>
+                <!-- Profile Form -->
+                <form *ngIf="activeTab() === 'PROFILE'" (submit)="handleProfileUpdate($event)" class="animate-fade-in">
+                    <h3 class="settings-form-title mb-4">Dados Pessoais</h3>
+                    
+                    <div class="mb-3">
+                        <label class="form-label-premium">Nome Completo</label>
+                        <input type="text" name="name" [(ngModel)]="profileData.name" class="form-control-premium" required />
                     </div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-stone-800 dark:text-white">Lembretes de Agendamento (WhatsApp)</h4>
-                        <p class="text-sm text-stone-500 dark:text-stone-400 mt-1">
-                            O sistema enviará automaticamente uma mensagem para o paciente 2 dias antes da consulta confirmada.
-                        </p>
+                    <div class="mb-3">
+                        <label class="form-label-premium">E-mail</label>
+                        <input type="email" name="email" [(ngModel)]="profileData.email" class="form-control-premium" required />
                     </div>
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="whatsappEnabled" (change)="handleNotifUpdate()" />
-                        <span class="slider"></span>
-                    </label>
+                    <div class="mb-4">
+                        <label class="form-label-premium">WhatsApp / Telefone</label>
+                        <input type="tel" name="phone" [(ngModel)]="profileData.phoneNumber" class="form-control-premium" placeholder="(00) 00000-0000" />
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" [disabled]="loading()" class="btn btn-primary-premium d-flex align-items-center gap-2 px-4 py-2.5">
+                            <lucide-icon name="save" size="18"></lucide-icon> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Security Form -->
+                <form *ngIf="activeTab() === 'SECURITY'" (submit)="handlePasswordUpdate($event)" class="animate-fade-in">
+                    <h3 class="settings-form-title mb-4">Alterar Senha</h3>
+                    
+                    <div class="mb-3">
+                        <label class="form-label-premium">Senha Atual</label>
+                        <input type="password" name="curr" [(ngModel)]="passData.current" class="form-control-premium" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-premium">Nova Senha</label>
+                        <input type="password" name="new" [(ngModel)]="passData.new" class="form-control-premium" required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label-premium">Confirmar Nova Senha</label>
+                        <input type="password" name="conf" [(ngModel)]="passData.confirm" class="form-control-premium" required />
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" [disabled]="loading()" class="btn btn-dark-premium d-flex align-items-center gap-2 px-4 py-2.5">
+                            <lucide-icon name="lock" size="18"></lucide-icon> Atualizar Senha
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Notifications -->
+                <div *ngIf="activeTab() === 'NOTIFICATIONS'" class="animate-fade-in">
+                    <h3 class="settings-form-title mb-4">Automação de Mensagens</h3>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="icon-box-success p-2 rounded-3">
+                            <lucide-icon name="bell" size="24"></lucide-icon>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="notification-title mb-1">Lembretes de Agendamento (WhatsApp)</h4>
+                            <p class="notification-desc mb-0">
+                                O sistema enviará automaticamente uma mensagem para o paciente 2 dias antes da consulta confirmada.
+                            </p>
+                        </div>
+                        <div class="form-check form-switch-premium">
+                            <input class="form-check-input" type="checkbox" role="switch" [(ngModel)]="whatsappEnabled" (change)="handleNotifUpdate()">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,56 +126,58 @@ import { User, UserRole } from '../../models/types';
     </div>
   `,
   styles: [`
-    .text-primary { color: var(--primary-color); }
-    .btn-primary { 
-      background-color: var(--primary-color); color: white; border-radius: 0.75rem; 
-      font-weight: 700; padding: 0.625rem 1.5rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;
+    .section-title { font-size: 1.5rem; font-weight: 800; color: var(--text-color); }
+    .section-subtitle { font-size: 0.875rem; color: var(--text-color-secondary); }
+
+    .btn-tab-settings {
+      text-align: left; padding: 12px 16px; border-radius: 12px;
+      font-weight: 700; font-size: 0.875rem; transition: all 0.2s;
+      background: var(--surface-card); color: var(--text-color-secondary);
+      &:hover { background: var(--surface-hover); color: var(--text-color); }
+      &.active { background: #fdf2f8; color: var(--primary-color); }
     }
-    .btn-dark {
-      background-color: #1c1917; color: white; border-radius: 0.75rem;
-      font-weight: 700; padding: 0.625rem 1.5rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;
+    :host-context(.dark) .btn-tab-settings.active { background: rgba(190, 24, 93, 0.1); color: #f472b6; }
+
+    .settings-content {
+      background: var(--surface-card); border-radius: 20px;
+      border: 1px solid var(--surface-border);
     }
-    :host-context(.dark) .btn-dark { background-color: white; color: #1c1917; }
+
+    .settings-form-title { font-size: 1.125rem; font-weight: 800; color: var(--text-color); }
     
-    .tab-btn {
-      width: 100%; text-align: left; padding: 0.75rem 1rem; border-radius: 0.75rem;
-      font-weight: 500; font-size: 0.875rem; transition: all 0.2s; display: flex; align-items: center; gap: 0.75rem;
-      background-color: white; color: #57534e;
+    .alert-premium {
+      padding: 12px 16px; border-radius: 12px; font-size: 0.8125rem; font-weight: 600;
+      &.success { background: #f0fdf4; border: 1px solid #dcfce7; color: #16a34a; }
+      &.error { background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; }
     }
-    :host-context(.dark) .tab-btn { background-color: #1c1917; color: #a8a29e; }
-    .tab-btn:hover { background-color: #f5f5f4; }
-    :host-context(.dark) .tab-btn:hover { background-color: #292524; }
-    .active-tab { background-color: #fdf2f8 !important; color: #be185d !important; }
-    :host-context(.dark) .active-tab { background-color: rgba(190, 24, 93, 0.1) !important; color: #f472b6 !important; }
 
-    .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #44403c; margin-bottom: 0.25rem; }
-    :host-context(.dark) .form-label { color: #d6d3d1; }
-    .form-input { 
-      width: 100%; border-radius: 0.75rem; border: 1px solid #e7e5e4; 
-      background-color: #f5f5f4; padding: 0.75rem; outline: none; transition: all 0.2s;
+    .btn-primary-premium {
+      background: var(--grad-primary); border: 0; border-radius: 12px; color: white; font-weight: 700;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2); transition: all 0.2s;
+      &:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(244, 63, 94, 0.3); color: white; }
     }
-    :host-context(.dark) .form-input { background-color: #1c1917; border-color: #292524; color: white; }
-    .form-input:focus { border-color: var(--primary-color); }
 
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #e7e5e4; border-radius: 34px; transition: .4s;
+    .btn-dark-premium {
+      background: #1c1917; border: 0; border-radius: 12px; color: white; font-weight: 700;
+      transition: all 0.2s; &:hover { background: #292524; transform: translateY(-2px); color: white; }
     }
-    .slider:before {
-      position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px;
-      background-color: white; transition: .4s; border-radius: 50%;
-    }
-    input:checked + .slider { background-color: #10b981; }
-    input:checked + .slider:before { transform: translateX(20px); }
+    :host-context(.dark) .btn-dark-premium { background: white; color: #1c1917; &:hover { background: #e7e5e4; } }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .notification-card {
+      background: var(--surface-hover); border: 1px solid var(--surface-border); border-radius: 16px;
     }
+    .icon-box-success { background: #dcfce7; color: #16a34a; }
+    .notification-title { font-size: 0.9375rem; font-weight: 700; color: var(--text-color); }
+    .notification-desc { font-size: 0.8125rem; color: var(--text-color-secondary); line-height: 1.4; }
+
+    .form-switch-premium .form-check-input {
+      width: 44px; height: 24px; cursor: pointer;
+      &:checked { background-color: #22c55e; border-color: #22c55e; }
+      &:focus { border-color: #22c55e; outline: 0; box-shadow: 0 0 0 0.25rem rgba(34, 197, 94, 0.1); }
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
-    .animate-hover:hover { transform: scale(1.02); }
   `]
 })
 export class SettingsComponent implements OnInit {

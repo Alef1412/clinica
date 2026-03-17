@@ -10,145 +10,137 @@ import { UserRole, Product } from '../../models/types';
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule],
   template: `
-    <div class="space-y-6 animate-fade-in">
-      <div class="flex justify-between items-center">
+    <div class="products-wrapper animate-fade-in">
+      <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h2 class="text-2xl font-bold text-stone-800 dark:text-white">Serviços & Produtos</h2>
-          <p class="text-stone-500 dark:text-stone-400">Catálogo de tratamentos disponíveis.</p>
+          <h2 class="section-title mb-1">Serviços & Produtos</h2>
+          <p class="section-subtitle mb-0">Catálogo de tratamentos disponíveis.</p>
         </div>
         <button *ngIf="canEdit()"
           (click)="isModalOpen.set(true)"
-          class="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-medium shadow-lg flex items-center gap-2 transition-all"
+          class="btn btn-primary-premium d-flex align-items-center gap-2 px-4 py-2.5"
         >
           <lucide-icon name="plus" size="18"></lucide-icon>
           Novo Serviço
         </button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let product of products()" class="product-card group">
-          <div class="flex justify-between items-start mb-4">
-            <div class="p-3 bg-primary-50 dark:bg-primary-900/30 text-primary rounded-xl group-hover:bg-primary group-hover:text-white transition">
-              <lucide-icon name="tag" size="24"></lucide-icon>
-            </div>
-            <div class="text-right">
-                <span class="font-bold text-lg text-stone-800 dark:text-white block">R$ {{ product.price | number:'1.2-2':'pt-BR' }}</span>
-                <span *ngIf="canEdit()" class="text-xs text-stone-400 dark:text-stone-500 block">Custo: R$ {{ product.cost | number:'1.2-2' }}</span>
-            </div>
-          </div>
-          
-          <h3 class="font-bold text-lg text-stone-800 dark:text-white mb-2">{{ product.name }}</h3>
-          <p class="text-stone-500 dark:text-stone-400 text-sm mb-4 min-h-[40px] flex-1">{{ product.description }}</p>
-          
-          <div class="pt-4 border-t border-stone-50 dark:border-stone-800 flex items-center justify-between">
-            <div class="flex items-center gap-2 text-stone-400 text-xs font-medium uppercase tracking-wider">
-                <lucide-icon name="clock" size="14"></lucide-icon>
-                <span>{{ product.durationMin }} min</span>
+      <div class="row g-4">
+        <div *ngFor="let product of products()" class="col-12 col-md-6 col-lg-4">
+          <div class="product-card-premium h-100 d-flex flex-column p-4 shadow-sm border">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+              <div class="product-icon-box d-flex align-items-center justify-content-center">
+                <lucide-icon name="tag" size="24"></lucide-icon>
+              </div>
+              <div class="text-right">
+                  <span class="product-price-label d-block text-end">R$ {{ product.price | number:'1.2-2':'pt-BR' }}</span>
+                  <span *ngIf="canEdit()" class="product-cost-label d-block text-end">Custo: R$ {{ product.cost | number:'1.2-2' }}</span>
+              </div>
             </div>
             
-            <div *ngIf="canEdit()" class="flex items-center gap-1.5 text-xs font-bold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-md">
-                <lucide-icon name="trending-up" size="12"></lucide-icon>
-                Lucro: R$ {{ (product.price - product.cost) | number:'1.2-2' }}
+            <h3 class="product-title-premium mb-2">{{ product.name }}</h3>
+            <p class="product-desc-premium mb-4 flex-grow-1">{{ product.description }}</p>
+            
+            <div class="product-footer pt-4 border-top d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2 product-duration-badge">
+                  <lucide-icon name="clock" size="14"></lucide-icon>
+                  <span>{{ product.durationMin }} min</span>
+              </div>
+              
+              <div *ngIf="canEdit()" class="product-profit-badge d-flex align-items-center gap-1.5 px-2 py-1 rounded-2">
+                  <lucide-icon name="trending-up" size="12"></lucide-icon>
+                  Lucro: R$ {{ (product.price - product.cost) | number:'1.2-2' }}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Create Product Modal -->
-      <div *ngIf="isModalOpen()" class="modal-backdrop" (click)="isModalOpen.set(false)">
-          <div class="modal-container max-w-md" (click)="$event.stopPropagation()">
-            <div class="modal-header bg-primary">
-              <h3 class="text-white font-bold text-lg">Novo Serviço</h3>
-              <button (click)="isModalOpen.set(false)" class="text-white/80 hover:text-white">
+      <div *ngIf="isModalOpen()" class="modal-backdrop-premium d-flex align-items-center justify-content-center p-3" (click)="isModalOpen.set(false)">
+          <div class="modal-card-premium animate-fade-in" (click)="$event.stopPropagation()">
+            <div class="modal-header-premium bg-primary d-flex justify-content-between align-items-center p-4">
+              <h3 class="mb-0 text-white font-weight-bold">Novo Serviço</h3>
+              <button (click)="isModalOpen.set(false)" class="btn-close-modal border-0 bg-transparent text-white">
                 <lucide-icon name="x" size="20"></lucide-icon>
               </button>
             </div>
             
-            <form (submit)="handleCreate($event)" class="p-6 space-y-4">
-              <div>
-                <label class="modal-label">Nome do Serviço</label>
-                <input type="text" name="name" [(ngModel)]="newData.name" required class="modal-input" />
+            <form (submit)="handleCreate($event)" class="p-4">
+              <div class="mb-3">
+                <label class="form-label-premium">Nome do Serviço</label>
+                <input type="text" name="name" [(ngModel)]="newData.name" required class="form-control-premium" />
               </div>
 
-              <div class="grid grid-cols-2 gap-4">
-                 <div>
-                  <label class="modal-label">Preço Venda (R$)</label>
-                  <input type="number" name="price" [(ngModel)]="newData.price" required class="modal-input" />
+              <div class="row g-3">
+                 <div class="col-6">
+                  <label class="form-label-premium">Preço Venda (R$)</label>
+                  <input type="number" name="price" [(ngModel)]="newData.price" required class="form-control-premium" />
                 </div>
-                 <div>
-                  <label class="modal-label">Custo (R$)</label>
-                  <input type="number" name="cost" [(ngModel)]="newData.cost" required class="modal-input" placeholder="0.00" />
+                 <div class="col-6">
+                  <label class="form-label-premium">Custo (R$)</label>
+                  <input type="number" name="cost" [(ngModel)]="newData.cost" required class="form-control-premium" placeholder="0.00" />
                 </div>
               </div>
 
-               <div>
-                  <label class="modal-label">Duração (min)</label>
-                  <input type="number" name="dur" [(ngModel)]="newData.durationMin" required class="modal-input" />
+               <div class="my-3">
+                  <label class="form-label-premium">Duração (min)</label>
+                  <input type="number" name="dur" [(ngModel)]="newData.durationMin" required class="form-control-premium" />
                 </div>
 
-              <div>
-                <label class="modal-label">Descrição</label>
-                <textarea name="desc" [(ngModel)]="newData.description" class="modal-input h-24 resize-none"></textarea>
+              <div class="mb-4">
+                <label class="form-label-premium">Descrição</label>
+                <textarea name="desc" [(ngModel)]="newData.description" class="form-control-premium textarea-premium h-24 resize-none"></textarea>
               </div>
 
-              <div class="pt-4">
-                <button type="submit" class="modal-submit bg-primary">Salvar Serviço</button>
-              </div>
+              <button type="submit" class="btn btn-primary-premium w-100 py-3">Salvar Serviço</button>
             </form>
           </div>
       </div>
     </div>
   `,
   styles: [`
-    .text-primary { color: var(--primary-color); }
-    .bg-primary { background-color: var(--primary-color); }
-    .bg-primary-50 { background-color: #fdf2f8; }
-    .bg-primary-dark { background-color: #db2777; }
-    
-    .product-card {
-      background-color: white;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      border: 1px solid #f5f5f4;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s;
-    }
-    :host-context(.dark) .product-card { background-color: #1c1917; border-color: #292524; }
-    .product-card:hover { border-color: var(--primary-color); }
+    .section-title { font-size: 1.5rem; font-weight: 800; color: var(--text-color); }
+    .section-subtitle { font-size: 0.875rem; color: var(--text-color-secondary); }
 
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(28, 25, 23, 0.4);
-      backdrop-filter: blur(4px);
-      padding: 1rem;
+    .btn-primary-premium {
+      background: var(--grad-primary); border: 0; border-radius: 12px; color: white; font-weight: 700;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2); transition: all 0.2s;
+      &:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(244, 63, 94, 0.3); color: white; }
     }
-    .modal-container {
-      background-color: white;
-      border-radius: 1rem;
-      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-      width: 100%;
-      overflow: hidden;
-      border: 1px solid #e7e5e4;
-    }
-    :host-context(.dark) .modal-container { background-color: #1c1917; border-color: #292524; }
-    .modal-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-    .modal-label { display: block; font-size: 0.875rem; font-weight: 500; color: #44403c; margin-bottom: 0.25rem; }
-    :host-context(.dark) .modal-label { color: #d6d3d1; }
-    .modal-input { width: 100%; border-radius: 0.75rem; border: 1px solid #e7e5e4; background-color: #f5f5f4; padding: 0.625rem; outline: none; }
-    :host-context(.dark) .modal-input { background-color: #1c1917; border-color: #292524; color: white; }
-    .modal-submit { width: 100%; color: white; font-weight: 700; padding: 0.75rem; border-radius: 0.75rem; transition: all 0.2s; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .product-card-premium {
+      background: var(--surface-card); border-radius: 20px; border-color: var(--surface-border) !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      &:hover { transform: translateY(-5px); border-color: var(--primary-color) !important; box-shadow: var(--shadow-lg); }
     }
+
+    .product-icon-box {
+      width: 48px; height: 48px; background: var(--primary-light); color: var(--primary-color);
+      border-radius: 14px; transition: all 0.3s;
+      .product-card-premium:hover & { background: var(--primary-color); color: white; }
+    }
+
+    .product-price-label { font-size: 1.25rem; font-weight: 800; color: var(--text-color); }
+    .product-cost-label { font-size: 0.75rem; color: var(--text-color-tertiary); }
+
+    .product-title-premium { font-size: 1.125rem; font-weight: 800; color: var(--text-color); }
+    .product-desc-premium { font-size: 0.875rem; color: var(--text-color-secondary); line-height: 1.5; min-height: 40px; }
+
+    .product-duration-badge { font-size: 0.75rem; font-weight: 700; color: var(--text-color-tertiary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .product-profit-badge { background: #dcfce7; color: #16a34a; font-size: 0.75rem; font-weight: 700; }
+    :host-context(.dark) .product-profit-badge { background: rgba(22, 163, 74, 0.1); color: #4ade80; }
+
+    /* Modals */
+    .modal-backdrop-premium { position: fixed; inset: 0; background: rgba(12, 10, 9, 0.4); backdrop-filter: blur(8px); z-index: 1100; }
+    .modal-card-premium { background: var(--surface-card); width: 100%; max-width: 440px; border-radius: 1.5rem; overflow: hidden; box-shadow: var(--shadow-lg); }
+    .btn-close-modal { opacity: 0.8; &:hover { opacity: 1; } }
+
+    .form-label-premium { font-size: 0.8125rem; font-weight: 700; color: var(--text-color-secondary); margin-bottom: 6px; text-transform: uppercase; }
+    .form-control-premium { border-radius: 12px; padding: 12px; border: 1px solid var(--surface-border); background: var(--surface-hover); color: var(--text-color); font-size: 0.9375rem; &:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1); outline: none; } }
+    .textarea-premium { min-height: 100px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
   `]
 })

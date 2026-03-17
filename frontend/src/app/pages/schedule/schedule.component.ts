@@ -10,131 +10,126 @@ import { UserRole, Appointment, Product, AppointmentStatus } from '../../models/
   standalone: true,
   imports: [CommonModule, FormsModule, LucideAngularModule],
   template: `
-    <div class="space-y-6 h-full flex flex-col animate-fade-in" (click)="showHeaderCalendar.set(false); showModalCalendar.set(false)">
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="schedule-wrapper h-100 d-flex flex-column animate-fade-in" (click)="showHeaderCalendar.set(false); showModalCalendar.set(false)">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-4">
         <div>
-          <h2 class="text-2xl font-bold text-stone-800 dark:text-white flex items-center gap-2">
+          <h2 class="section-title mb-1 d-flex align-items-center gap-2">
              <lucide-icon name="calendar" size="28" class="text-primary"></lucide-icon>
              Agenda
           </h2>
-          <p class="text-stone-500 dark:text-stone-400 text-sm">Gerencie suas consultas semanais.</p>
+          <p class="section-subtitle mb-0">Gerencie suas consultas semanais.</p>
         </div>
         
-        <div class="flex gap-3">
+        <div class="d-flex gap-3">
              <button 
                 (click)="handleGoogleSync()"
                 [disabled]="isSyncing()"
-                class="px-4 py-2 rounded-xl font-medium border transition-all flex items-center gap-2 text-sm shadow-sm"
-                [ngClass]="googleSynced() 
-                        ? 'bg-white dark:bg-stone-800 text-green-600 border-green-200 dark:border-green-800 hover:border-red-200 hover:text-red-500' 
-                        : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:bg-stone-50'"
+                class="btn btn-sync-google d-flex align-items-center gap-2"
+                [class.synced]="googleSynced()"
                 [title]="googleSynced() ? 'Clique para desconectar' : 'Sincronizar com Google'"
             >
                 <lucide-icon *ngIf="isSyncing()" name="loader-2" class="animate-spin" size="16"></lucide-icon>
                 <ng-container *ngIf="!isSyncing()">
-                  <div *ngIf="googleSynced()" class="relative">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-4 h-4" alt="GCal"/>
-                    <div class="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
+                  <div *ngIf="googleSynced()" class="status-indicator">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="gcal-icon" alt="GCal"/>
+                    <div class="dot"></div>
                   </div>
-                  <img *ngIf="!googleSynced()" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-4 h-4" alt="GCal"/>
+                  <img *ngIf="!googleSynced()" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="gcal-icon" alt="GCal"/>
                 </ng-container>
                 {{ isSyncing() ? 'Conectando...' : googleSynced() ? 'Sincronizado' : 'Conectar Google' }}
             </button>
             <button 
               (click)="$event.stopPropagation(); isModalOpen.set(true)"
-              class="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-xl font-medium shadow-lg flex items-center gap-2 transition-all text-sm"
+              class="btn btn-primary-premium d-flex align-items-center gap-2"
             >
               <lucide-icon name="plus" size="18"></lucide-icon>
-              <span class="hidden sm:inline">Novo Agendamento</span>
+              <span class="d-none d-sm-inline">Novo Agendamento</span>
             </button>
         </div>
       </div>
 
       <!-- Calendar Controls -->
-      <div class="flex items-center justify-between bg-white dark:bg-stone-900 p-2 rounded-xl border border-stone-200 dark:border-stone-800 relative z-20">
-         <div class="flex items-center gap-2">
-            <button (click)="$event.stopPropagation(); prevWeek()" class="p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-stone-700 dark:text-stone-300">
+      <div class="calendar-controls d-flex align-items-center justify-content-between p-2 mb-3">
+         <div class="d-flex align-items-center gap-2">
+            <button (click)="$event.stopPropagation(); prevWeek()" class="btn btn-icon-nav">
                 <lucide-icon name="chevron-left" size="20"></lucide-icon>
             </button>
             
-            <div class="relative">
+            <div class="position-relative">
                 <button 
                     (click)="$event.stopPropagation(); showHeaderCalendar.set(!showHeaderCalendar()); showModalCalendar.set(false)"
-                    [class.bg-primary-50]="showHeaderCalendar()"
-                    [class.text-primary-700]="showHeaderCalendar()"
-                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors border border-transparent hover:bg-stone-100 dark:hover:bg-stone-800 hover:border-stone-200"
+                    class="btn btn-month-selector d-flex align-items-center gap-2"
+                    [class.active]="showHeaderCalendar()"
                 >
-                    <lucide-icon name="calendar" size="18" [class.text-primary]="showHeaderCalendar()"></lucide-icon>
-                    <span class="font-semibold text-stone-800 dark:text-white">
+                    <lucide-icon name="calendar" size="18"></lucide-icon>
+                    <span class="month-label">
                         {{ startOfWeek() | date:'LLLL, yyyy':'':'pt-BR' }}
                     </span>
                 </button>
-                <div *ngIf="showHeaderCalendar()" class="mini-calendar-popup" (click)="$event.stopPropagation()">
-                   <!-- Mini Calendar Simplified -->
-                   <div class="flex justify-between items-center mb-4">
-                      <span class="font-bold text-sm text-stone-800 dark:text-white">{{ currentDate() | date:'MMMM yyyy':'':'pt-BR' }}</span>
+                <div *ngIf="showHeaderCalendar()" class="mini-calendar-popup shadow-lg p-3" (click)="$event.stopPropagation()">
+                   <div class="d-flex justify-content-between align-items-center mb-3">
+                      <span class="popup-month-title">{{ currentDate() | date:'MMMM yyyy':'':'pt-BR' }}</span>
                    </div>
-                   <div class="text-xs text-stone-400 text-center">Calendário interativo em desenvolvimento</div>
+                   <div class="popup-placeholder text-center py-2">Calendário interativo em desenvolvimento</div>
                 </div>
             </div>
 
-            <button (click)="$event.stopPropagation(); nextWeek()" class="p-2 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-stone-700 dark:text-stone-300">
+            <button (click)="$event.stopPropagation(); nextWeek()" class="btn btn-icon-nav">
                 <lucide-icon name="chevron-right" size="20"></lucide-icon>
             </button>
          </div>
-         <div class="flex gap-4 px-4 text-xs font-medium">
-             <div class="flex items-center gap-1.5">
-                 <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                 <span class="text-stone-600 dark:text-stone-400">Dr. Lucas</span>
+         <div class="d-flex gap-4 px-3 calendar-legend">
+             <div class="legend-item d-flex align-items-center gap-1.5">
+                 <div class="legend-dot blue"></div>
+                 <span>Dr. Lucas</span>
              </div>
-             <div *ngIf="googleSynced()" class="flex items-center gap-1.5">
-                <div class="w-3 h-3 rounded-full border border-red-500 bg-white"></div>
-                <span class="text-stone-600 dark:text-stone-400">Google Calendar</span>
+             <div *ngIf="googleSynced()" class="legend-item d-flex align-items-center gap-1.5">
+                <div class="legend-dot gcal"></div>
+                <span>Google Calendar</span>
             </div>
          </div>
       </div>
 
       <!-- Calendar Grid -->
-      <div class="flex-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl overflow-auto shadow-sm flex flex-col min-h-[600px]">
+      <div class="calendar-grid-container flex-grow-1 d-flex flex-column shadow-sm overflow-auto">
         <!-- Header Row -->
-        <div class="flex border-b border-stone-200 dark:border-stone-800 sticky top-0 bg-white dark:bg-stone-900 z-10">
-            <div class="w-16 border-r border-stone-200 dark:border-stone-800 shrink-0"></div>
-            <div *ngFor="let date of weekDays()" class="flex-1 py-3 text-center border-r border-stone-200 dark:border-stone-800 min-w-[100px]">
-                <p class="text-xs uppercase font-semibold mb-1" [class.text-primary]="isToday(date)">
+        <div class="grid-header d-flex sticky-top bg-white z-2">
+            <div class="time-label-spacer shrink-0 border-end"></div>
+            <div *ngFor="let date of weekDays()" class="day-cell flex-grow-1 py-3 text-center border-end">
+                <p class="day-name mb-1" [class.active]="isToday(date)">
                     {{ date | date:'EEE':'':'pt-BR' }}
                 </p>
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mx-auto text-lg font-bold" 
-                     [class.bg-primary]="isToday(date)" [class.text-white]="isToday(date)">
+                <div class="day-number shadow-sm" [class.active]="isToday(date)">
                     {{ date | date:'dd' }}
                 </div>
             </div>
         </div>
 
         <!-- Time Grid -->
-        <div class="flex flex-1 relative">
-            <div class="w-16 shrink-0 bg-stone-50 dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800">
-                <div *ngFor="let hour of hours" class="h-[60px] text-right pr-2 pt-2 text-xs text-stone-500 relative">
+        <div class="grid-body d-flex flex-grow-1 position-relative">
+            <div class="time-labels shrink-0 border-end">
+                <div *ngFor="let hour of hours" class="time-label position-relative pr-2 pt-2">
                     {{ hour }}:00
                 </div>
             </div>
 
-            <div *ngFor="let date of weekDays(); let dayIndex = index" class="flex-1 border-r border-stone-200 dark:border-stone-800 relative min-w-[100px]">
+            <div *ngFor="let date of weekDays(); let dayIndex = index" class="day-column flex-grow-1 border-end position-relative">
                 <div *ngFor="let hour of hours" 
-                     class="h-[60px] border-b border-stone-100 dark:border-stone-800/50 hover:bg-stone-50 dark:hover:bg-stone-800/30 transition-colors cursor-pointer"
+                     class="time-slot border-bottom transition-colors cursor-pointer"
                      (click)="$event.stopPropagation(); onSlotClick(date, hour)">
                 </div>
 
                 <!-- Events -->
                 <div *ngFor="let apt of getAppointmentsForDay(date)"
                      (click)="onEventClick($event, apt)"
-                     class="absolute left-1 right-1 rounded-md p-1.5 text-xs shadow-sm border-l-4 overflow-hidden cursor-pointer hover:brightness-95 transition z-10"
+                     class="event-block position-absolute rounded-3 shadow-sm transition z-1"
                      [ngStyle]="getEventStyle(apt)">
-                    <div class="font-bold truncate flex items-center gap-1">
-                        <img *ngIf="apt.source === 'GOOGLE'" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="w-3 h-3 inline" />
+                    <div class="event-title font-weight-bold text-truncate d-flex align-items-center gap-1">
+                        <img *ngIf="apt.source === 'GOOGLE'" src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" class="gcal-tiny-icon" />
                         <span *ngIf="apt.status === 'PENDING'">(Pendente) </span> 
                         {{ apt.serviceName }}
                     </div>
-                    <div class="truncate text-[10px] opacity-80">
+                    <div class="event-subtitle text-truncate">
                         {{ userRole() === 'PATIENT' ? apt.professionalName : apt.patientName }}
                     </div>
                 </div>
@@ -143,22 +138,23 @@ import { UserRole, Appointment, Product, AppointmentStatus } from '../../models/
       </div>
 
       <!-- Detail Modal Simplified -->
-      <div *ngIf="selectedAppointment()" class="modal-backdrop" (click)="selectedAppointment.set(null)">
-          <div class="modal-container max-w-sm" (click)="$event.stopPropagation()">
-            <div class="modal-header" [ngClass]="getHeaderClass(selectedAppointment()!)">
-              <h3 class="text-white font-bold text-lg flex items-center gap-2">
+      <div *ngIf="selectedAppointment()" class="modal-backdrop-premium d-flex align-items-center justify-content-center p-3" (click)="selectedAppointment.set(null)">
+          <div class="modal-card-premium small animate-fade-in" (click)="$event.stopPropagation()">
+            <div class="modal-header-premium d-flex justify-content-between align-items-center p-4" [ngClass]="getHeaderClass(selectedAppointment()!)">
+              <h3 class="mb-0 text-white font-weight-bold d-flex align-items-center gap-2">
                  <lucide-icon name="calendar" size="20"></lucide-icon> Detalhes
               </h3>
-              <button (click)="selectedAppointment.set(null)" class="text-white/80 hover:text-white">
+              <button (click)="selectedAppointment.set(null)" class="btn-close-modal border-0 bg-transparent text-white">
                 <lucide-icon name="x" size="20"></lucide-icon>
               </button>
             </div>
-            <div class="p-6 space-y-4">
-               <div class="font-bold text-lg">{{ selectedAppointment()?.serviceName }}</div>
-               <div class="text-stone-500">
+            <div class="p-4">
+               <div class="event-detail-title mb-2">{{ selectedAppointment()?.serviceName }}</div>
+               <div class="event-detail-time mb-4 d-flex align-items-center gap-2">
+                  <lucide-icon name="clock" size="16"></lucide-icon>
                   {{ selectedAppointment()?.date | date:'EEEE, dd MMMM':'':'pt-BR' }} às {{ selectedAppointment()?.date | date:'HH:mm' }}
                </div>
-               <button (click)="handleStatusChange('CANCELLED')" class="w-full bg-red-50 text-red-600 border border-red-200 font-semibold py-3 rounded-xl transition">
+               <button (click)="handleStatusChange('CANCELLED')" class="btn btn-cancel-appointment w-100 py-3">
                   Cancelar Agendamento
                </button>
             </div>
@@ -166,88 +162,117 @@ import { UserRole, Appointment, Product, AppointmentStatus } from '../../models/
       </div>
 
        <!-- Booking Modal Simplified -->
-       <div *ngIf="isModalOpen()" class="modal-backdrop" (click)="isModalOpen.set(false)">
-          <div class="modal-container max-w-md" (click)="$event.stopPropagation()">
-            <div class="modal-header bg-primary">
-              <h3 class="text-white font-bold text-lg">Novo Agendamento</h3>
-              <button (click)="isModalOpen.set(false)" class="text-white/80 hover:text-white">
+       <div *ngIf="isModalOpen()" class="modal-backdrop-premium d-flex align-items-center justify-content-center p-3" (click)="isModalOpen.set(false)">
+          <div class="modal-card-premium animate-fade-in" (click)="$event.stopPropagation()">
+            <div class="modal-header-premium bg-primary d-flex justify-content-between align-items-center p-4">
+              <h3 class="mb-0 text-white font-weight-bold">Novo Agendamento</h3>
+              <button (click)="isModalOpen.set(false)" class="btn-close-modal border-0 bg-transparent text-white">
                 <lucide-icon name="x" size="20"></lucide-icon>
               </button>
             </div>
-            <form (submit)="handleBook($event)" class="p-6 space-y-4">
-               <div>
-                  <label class="modal-label">Procedimento</label>
-                  <select name="svc" [(ngModel)]="bookingData.serviceId" class="modal-input" required>
+            <form (submit)="handleBook($event)" class="p-4">
+               <div class="mb-3">
+                  <label class="form-label-premium">Procedimento</label>
+                  <select name="svc" [(ngModel)]="bookingData.serviceId" class="form-select-premium" required>
                      <option value="">Selecione...</option>
                      <option *ngFor="let s of services()" [value]="s.id">{{ s.name }} - R$ {{ s.price }}</option>
                   </select>
                </div>
-               <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="modal-label">Data</label>
-                    <input type="date" name="date" [(ngModel)]="bookingData.date" class="modal-input" required />
+               <div class="row g-3">
+                  <div class="col-6">
+                    <label class="form-label-premium">Data</label>
+                    <input type="date" name="date" [(ngModel)]="bookingData.date" class="form-control-premium" required />
                   </div>
-                  <div>
-                    <label class="modal-label">Hora</label>
-                    <input type="time" name="time" [(ngModel)]="bookingData.time" class="modal-input" required />
+                  <div class="col-6">
+                    <label class="form-label-premium">Hora</label>
+                    <input type="time" name="time" [(ngModel)]="bookingData.time" class="form-control-premium" required />
                   </div>
                </div>
-               <button type="submit" class="modal-submit bg-primary mt-4">Confirmar Agendamento</button>
+               <button type="submit" class="btn btn-primary-premium w-100 py-3 mt-4">Confirmar Agendamento</button>
             </form>
           </div>
        </div>
     </div>
   `,
   styles: [`
-    .text-primary { color: var(--primary-color); }
-    .bg-primary { background-color: var(--primary-color); }
-    .bg-primary-50 { background-color: #fdf2f8; }
-    .bg-primary-dark { background-color: #db2777; }
-    
-    .mini-calendar-popup {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      margin-top: 0.5rem;
-      z-index: 50;
-      background-color: white;
-      padding: 1rem;
-      border-radius: 0.75rem;
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-      border: 1px solid #e7e5e4;
-      width: 16rem;
-    }
-    :host-context(.dark) .mini-calendar-popup { background-color: #292524; border-color: #44403c; }
+    .section-title { font-size: 1.5rem; font-weight: 800; color: var(--text-color); }
+    .section-subtitle { font-size: 0.875rem; color: var(--text-color-secondary); }
 
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(28, 25, 23, 0.4);
-      backdrop-filter: blur(4px);
-      padding: 1rem;
+    .btn-sync-google {
+      background: var(--surface-card); border: 1px solid var(--surface-border);
+      border-radius: 12px; padding: 10px 16px; font-weight: 600; font-size: 0.8125rem;
+      color: var(--text-color-secondary); transition: all 0.2s;
+      &:hover { border-color: var(--stone-300); background: var(--surface-hover); color: var(--text-color); }
+      &.synced { color: #16a34a; border-color: #dcfce7; background: #f0fdf4; 
+        &:hover { color: #ef4444; border-color: #fee2e2; background: #fef2f2; }
+      }
     }
-    .modal-container {
-      background-color: white;
-      border-radius: 1rem;
-      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-      width: 100%;
-      overflow: hidden;
-      border: 1px solid #e7e5e4;
-    }
-    :host-context(.dark) .modal-container { background-color: #1c1917; border-color: #292524; }
-    .modal-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
-    .modal-label { display: block; font-size: 0.875rem; font-weight: 500; color: #44403c; margin-bottom: 0.25rem; }
-    .modal-input { width: 100%; border-radius: 0.75rem; border: 1px solid #e7e5e4; background-color: #f5f5f4; padding: 0.625rem; outline: none; }
-    .modal-submit { width: 100%; color: white; font-weight: 700; padding: 0.75rem; border-radius: 0.75rem; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .status-indicator { position: relative; }
+    .gcal-icon { width: 16px; height: 16px; }
+    .dot { position: absolute; bottom: -2px; right: -2px; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; border: 2px solid white; }
+
+    .btn-primary-premium {
+      background: var(--grad-primary); color: white; border: 0; border-radius: 12px;
+      padding: 10px 16px; font-weight: 700; font-size: 0.8125rem; box-shadow: var(--shadow-md);
+      transition: all 0.2s; &:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(244, 63, 94, 0.3); color: white; }
     }
+
+    .calendar-controls { background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 14px; }
+    .btn-icon-nav { padding: 6px; border: 0; background: transparent; color: var(--text-color-secondary); &:hover { color: var(--primary-color); background: var(--surface-hover); border-radius: 8px; } }
+
+    .btn-month-selector {
+      border: 1px solid transparent; background: transparent; padding: 6px 12px; border-radius: 10px;
+      font-weight: 700; color: var(--text-color); transition: all 0.2s;
+      &.active { background: var(--primary-light); color: var(--primary-color); border-color: var(--primary-light); }
+      &:hover:not(.active) { background: var(--surface-hover); }
+    }
+
+    .calendar-legend { font-size: 0.75rem; font-weight: 600; color: var(--text-color-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; &.blue { background: #3b82f6; } &.gcal { background: white; border: 1px solid #ef4444; } }
+
+    .calendar-grid-container {
+      background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 16px;
+      min-height: 600px;
+    }
+
+    .grid-header { border-bottom: 1px solid var(--surface-border); }
+    .time-label-spacer { width: 64px; }
+    .day-cell { min-width: 100px; border-color: var(--surface-border) !important; }
+    .day-name { font-size: 0.6875rem; font-weight: 700; color: var(--text-color-tertiary); text-transform: uppercase; &.active { color: var(--primary-color); } }
+    .day-number { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.125rem; font-weight: 800; color: var(--text-color); transition: all 0.2s; &.active { background: var(--primary-color); color: white; } }
+
+    .time-labels { width: 64px; background: var(--surface-hover); border-color: var(--surface-border) !important; }
+    .time-label { height: 60px; font-size: 0.6875rem; color: var(--text-color-tertiary); text-align: right; }
+    .day-column { min-width: 100px; border-color: var(--surface-border) !important; }
+    .time-slot { height: 60px; border-color: var(--surface-border) !important; &:hover { background: var(--surface-hover); } }
+
+    .event-block { 
+      left: 4px; right: 4px; padding: 6px; font-size: 0.75rem; border-left: 4px solid; 
+      transition: filter 0.2s; &:hover { filter: brightness(0.95); }
+    }
+    .event-title { font-size: 0.75rem; margin-bottom: 2px; }
+    .event-subtitle { font-size: 0.625rem; opacity: 0.8; }
+    .gcal-tiny-icon { width: 12px; height: 12px; }
+
+    /* Modals */
+    .modal-backdrop-premium { position: fixed; inset: 0; background: rgba(12, 10, 9, 0.4); backdrop-filter: blur(8px); z-index: 1100; }
+    .modal-card-premium { background: var(--surface-card); width: 100%; max-width: 440px; border-radius: 1.5rem; overflow: hidden; box-shadow: var(--shadow-lg); &.small { max-width: 380px; } }
+    .modal-header-premium { &.bg-primary { background: var(--primary-color); } }
+    .btn-close-modal { opacity: 0.8; &:hover { opacity: 1; } }
+
+    .event-detail-title { font-size: 1.25rem; font-weight: 800; color: var(--text-color); }
+    .event-detail-time { font-size: 0.875rem; color: var(--text-color-secondary); font-weight: 600; }
+    .btn-cancel-appointment { background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; font-weight: 700; border-radius: 12px; &:hover { background: #fee2e2; } }
+
+    .form-label-premium { font-size: 0.8125rem; font-weight: 700; color: var(--text-color-secondary); margin-bottom: 6px; text-transform: uppercase; }
+    .form-control-premium, .form-select-premium { border-radius: 12px; padding: 12px; border: 1px solid var(--surface-border); background: var(--surface-hover); color: var(--text-color); font-size: 0.9375rem; &:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1); outline: none; } }
+
+    .mini-calendar-popup { position: absolute; top: 100%; left: 0; background: var(--surface-card); border: 1px solid var(--surface-border); border-radius: 12px; z-index: 1050; width: 260px; margin-top: 8px; }
+    .popup-month-title { font-size: 0.875rem; font-weight: 800; color: var(--text-color); }
+    .popup-placeholder { font-size: 0.75rem; color: var(--text-color-tertiary); font-style: italic; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
   `]
 })
@@ -355,9 +380,9 @@ export class ScheduleComponent implements OnInit {
   }
 
   getHeaderClass(apt: Appointment) {
-    if (apt.source === 'GOOGLE') return 'bg-white border-b border-stone-200';
-    if (apt.status === 'PENDING') return 'bg-amber-500';
-    return 'bg-stone-800';
+    if (apt.source === 'GOOGLE') return 'bg-white border-bottom border-light';
+    if (apt.status === 'PENDING') return 'bg-warning';
+    return 'bg-dark';
   }
 
   async handleBook(e: Event) {
