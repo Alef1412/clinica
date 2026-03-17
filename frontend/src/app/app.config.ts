@@ -62,7 +62,13 @@ import {
     FileSearch,
     Sticker,
     Clipboard,
-    Zap
+    Zap,
+    Tag,
+    Banknote,
+    Receipt,
+    PackagePlus,
+    Loader2,
+    TrendingUp
 } from 'lucide-angular';
 
 registerLocaleData(localePt);
@@ -85,7 +91,8 @@ export const appConfig: ApplicationConfig = {
         Mail, Plus, Lock, CheckCircle, Clock, AlertCircle, Check, Search, Trash, User, UserPlus, Activity, CreditCard,
         ChevronRight, ChevronLeft, Filter, MoreHorizontal, MoreVertical, Download, Upload, Video, Bell, Shield,
         Eye, EyeOff, Save, Trash2, Heart, Stethoscope, Phone, MapPin, Info, ArrowRight, ArrowLeft, PlusCircle, XCircle,
-        Copy, Share2, FileSearch, Sticker, Clipboard, Zap
+        Copy, Share2, FileSearch, Sticker, Clipboard, Zap,
+        Tag, Banknote, Receipt, PackagePlus, Loader2, TrendingUp
     }))
   ]
 };
