@@ -77,6 +77,22 @@ export class MockDbService {
     { id: 't3', amount: 5000, type: 'EXPENSE', date: new Date().toISOString(), description: 'Aluguel do Espaço', professionalId: undefined },
   ]);
 
+  private googleEvents = signal<Appointment[]>([
+    {
+      id: 'g1',
+      patientId: 'ext',
+      patientName: 'External Event',
+      professionalId: '2',
+      professionalName: 'Dr. Lucas',
+      serviceId: 'ext',
+      serviceName: 'Google Calendar Event',
+      date: this.getTodayAt(9),
+      status: AppointmentStatus.CONFIRMED,
+      price: 0,
+      source: 'GOOGLE'
+    }
+  ]);
+
   // Auth Logic
   async login(email: string, password: string): Promise<User | undefined> {
     await this.delay(800);
@@ -106,9 +122,19 @@ export class MockDbService {
     return safeUser;
   }
 
+  async verifyCode(code: string): Promise<boolean> {
+    await this.delay(500);
+    return code === '1234';
+  }
+
   // Data Logic
   getProducts() { return this.products(); }
   
+  getTransactions(user: User) {
+    const trans = this.transactions();
+    if (user.role === UserRole.ADMIN) return trans;
+    return trans.filter(t => t.professionalId === user.id);
+  }
   getAppointments(user: User) {
     const appts = this.appointments();
     if (user.role === UserRole.ADMIN) return appts;
@@ -118,6 +144,24 @@ export class MockDbService {
 
   async updateAppointmentStatus(id: string, status: AppointmentStatus) {
     this.appointments.update(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+  }
+
+  async createAppointment(apt: Partial<Appointment>) {
+    const newApt: Appointment = {
+      id: Math.random().toString(36).substr(2, 9),
+      patientId: apt.patientId || '',
+      patientName: apt.patientName || '',
+      professionalId: apt.professionalId || '',
+      professionalName: apt.professionalName || '',
+      serviceId: apt.serviceId || '',
+      serviceName: apt.serviceName || '',
+      date: apt.date || new Date().toISOString(),
+      status: apt.status || AppointmentStatus.PENDING,
+      price: apt.price || 0,
+      source: apt.source || 'LUMINA'
+    };
+    this.appointments.update(prev => [...prev, newApt]);
+    return newApt;
   }
 
   getPatients() {
@@ -151,6 +195,58 @@ export class MockDbService {
     };
     this.users.update(p => [...p, newUser]);
     return newUser;
+  }
+
+  async requestAnamnesis(patientId: string) {
+    this.users.update(prev => prev.map(u => u.id === patientId ? { ...u, anamnesisStatus: AnamnesisStatus.REQUESTED } : u));
+  }
+
+  async updateUserPassword(userId: string, password: string) {
+    this.users.update(prev => prev.map(u => u.id === userId ? { ...u, password } : u));
+  }
+
+  async updateUserProfile(userId: string, data: Partial<User>) {
+    let updated: User | undefined;
+    this.users.update(prev => prev.map(u => {
+      if (u.id === userId) {
+        updated = { ...u, ...data };
+        return updated;
+      }
+      return u;
+    }));
+    return updated;
+  }
+
+  async createProduct(prod: Partial<Product>) {
+    const newProd: Product = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: prod.name || '',
+      price: prod.price || 0,
+      cost: prod.cost || 0,
+      durationMin: prod.durationMin || 0,
+      description: prod.description || ''
+    };
+    this.products.update(prev => [...prev, newProd]);
+    return newProd;
+  }
+
+  async getAnamnesis(patientId: string) {
+    await this.delay(500);
+    return this.anamnesis().find(f => f.patientId === patientId);
+  }
+
+  async saveAnamnesis(form: AnamnesisForm) {
+    this.anamnesis.update(prev => {
+      const filtered = prev.filter(f => f.patientId !== form.patientId);
+      return [...filtered, { ...form, updatedAt: new Date().toISOString() }];
+    });
+    // Also update user status
+    this.users.update(prev => prev.map(u => u.id === form.patientId ? { ...u, anamnesisStatus: AnamnesisStatus.COMPLETED } : u));
+  }
+
+  async getGoogleEvents() {
+    await this.delay(800);
+    return this.googleEvents();
   }
 
   // Helpers

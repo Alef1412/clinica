@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global variables */
+:root {
+  --primary-color: #ec4899;
+  --primary-color-text: #ffffff;
+  --secondary-color: #3b82f6;
+  --accent-color: #10b981;
+  --surface-ground: #f8fafc;
+  --surface-section: #ffffff;
+  --surface-card: #ffffff;
+  --surface-overlay: #ffffff;
+  --surface-border: #dfe7ef;
+  --surface-hover: #f1f5f9;
+  
+  --font-family: 'Roboto Flex', sans-serif;
+  
+  --text-color: #334155;
+  --text-color-secondary: #64748b;
+  
+  /* Bootstrap Overrides/Compatibility */
+  --bs-primary: var(--primary-color);
+  --bs-font-sans-serif: var(--font-family);
+}
+
+@import "bootstrap/scss/bootstrap";
+@import "primeicons/primeicons.css";
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-color);
+}
