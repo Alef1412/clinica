@@ -109,3 +109,181 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL PrimeNG Overrides — Anamnesis Dialog
+   (Must be global because p-dialog appends to body)
+   ═══════════════════════════════════════════════════════ */
+
+/* Dialog shell */
+.anamnesis-dialog .p-dialog {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  box-shadow: 0 32px 80px rgba(0,0,0,.18) !important;
+  border: none !important;
+}
+
+/* Header — rose gradient */
+.anamnesis-dialog .p-dialog-header {
+  background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%) !important;
+  padding: 22px 28px !important;
+  border-bottom: none !important;
+  color: white !important;
+}
+.anamnesis-dialog .p-dialog-title { display: none !important; }
+.anamnesis-dialog .p-dialog-header .p-button,
+.anamnesis-dialog .p-dialog-header .p-dialog-close-button {
+  color: white !important;
+  opacity: 0.85;
+  background: rgba(255,255,255,.15) !important;
+  border-radius: 50% !important;
+  &:hover { opacity: 1; background: rgba(255,255,255,.25) !important; }
+}
+
+/* Content & footer */
+.anamnesis-dialog .p-dialog-content {
+  background: #f9fafb !important;
+  padding: 24px 28px !important;
+  color: #1c1917 !important;
+}
+.anamnesis-dialog .p-dialog-footer {
+  background: #f9fafb !important;
+  padding: 14px 28px 22px !important;
+  border-top: 1px solid #e7e5e4 !important;
+}
+
+/* ─── Tabs inside the dialog ─── */
+.anamnesis-dialog .p-tablist {
+  background: #ffffff !important;
+  border-bottom: 2px solid #e7e5e4 !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+.anamnesis-dialog .p-tab {
+  background: transparent !important;
+  color: #78716c !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  margin-bottom: -2px !important;
+  padding: 12px 20px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer;
+  transition: color 0.2s;
+  &:hover { color: #f43f5e !important; }
+}
+.anamnesis-dialog .p-tab.p-tab-active,
+.anamnesis-dialog .p-tab[aria-selected="true"] {
+  color: #f43f5e !important;
+  border-bottom-color: #f43f5e !important;
+  background: transparent !important;
+}
+.anamnesis-dialog .p-tabpanels {
+  background: #ffffff !important;
+  border: 1px solid #e7e5e4 !important;
+  border-top: none !important;
+  border-radius: 0 0 12px 12px !important;
+  padding: 0 !important;
+  color: #1c1917 !important;
+}
+
+/* ─── Select inside dialog (trigger control) ─── */
+.anamnesis-dialog .p-select {
+  background: #ffffff !important;
+  border: 1px solid #e7e5e4 !important;
+  border-radius: 10px !important;
+  color: #1c1917 !important;
+}
+.anamnesis-dialog .p-select .p-select-label { color: #1c1917 !important; }
+.anamnesis-dialog .p-select.p-focus {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 0 3px rgba(244,63,94,.12) !important;
+}
+
+/* ─── Select overlay (appended to body — must be global) ─── */
+.p-select-overlay {
+  background: #ffffff !important;
+  border: 1px solid #e7e5e4 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.10) !important;
+  overflow: hidden !important;
+}
+.p-select-list {
+  background: #ffffff !important;
+  padding: 6px !important;
+}
+.p-select-list-option, .p-select-option {
+  background: #ffffff !important;
+  color: #1c1917 !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  font-size: 0.9375rem !important;
+  transition: background .15s !important;
+}
+.p-select-list-option:hover, .p-select-option:hover {
+  background: #fff1f2 !important;
+  color: #f43f5e !important;
+}
+.p-select-list-option.p-selected, .p-select-option.p-selected,
+.p-select-list-option.p-highlight, .p-select-option.p-highlight {
+  background: #fff1f2 !important;
+  color: #f43f5e !important;
+  font-weight: 700 !important;
+}
+
+/* ─── Radio buttons ─── */
+.anamnesis-dialog .p-radiobutton.p-highlight .p-radiobutton-box,
+.anamnesis-dialog .p-radiobutton-checked .p-radiobutton-box {
+  border-color: #f43f5e !important;
+  background: #f43f5e !important;
+}
+
+/* ─── Primary action button ─── */
+.anamnesis-dialog .p-button:not(.p-button-outlined):not(.p-button-text):not([severity="secondary"]) {
+  background: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(244,63,94,.25) !important;
+  transition: all .2s !important;
+  &:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(244,63,94,.35) !important;
+  }
+}
+
+/* ─── Secondary/outlined button ─── */
+.anamnesis-dialog .p-button[severity="secondary"],
+.anamnesis-dialog .p-button.p-button-secondary {
+  border: 1px solid #d6d3d1 !important;
+  color: #57534e !important;
+  background: #ffffff !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+}
+
+/* ─── Radio buttons — fix dark unselected state ─── */
+.anamnesis-dialog .p-radiobutton .p-radiobutton-box {
+  background: #ffffff !important;
+  border: 2px solid #d6d3d1 !important;
+  border-radius: 50% !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+.anamnesis-dialog .p-radiobutton.p-highlight .p-radiobutton-box,
+.anamnesis-dialog .p-radiobutton-checked .p-radiobutton-box {
+  border-color: #f43f5e !important;
+  background: #f43f5e !important;
+}
+.anamnesis-dialog .p-radiobutton .p-radiobutton-icon {
+  background: #ffffff !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
+/* ─── Dialog backdrop — p-overlay-mask is the correct PrimeNG v18 class ─── */
+.p-overlay-mask,
+.p-dialog-mask {
+  background: rgba(12, 10, 9, 0.3) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}

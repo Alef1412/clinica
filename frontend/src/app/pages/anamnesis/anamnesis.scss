@@ -1,0 +1,240 @@
+/* ──────────────────────────────────────────
+   Anamnesis Component Styles
+   Uses Lumina Design System variables
+   ────────────────────────────────────────── */
+
+:host { display: block; }
+
+/* ─── Page ─── */
+.anamnesis-page { animation: fadeIn 0.4s ease-out forwards; }
+
+.loading-overlay { min-height: 55vh; }
+.loading-text    { color: var(--text-color-secondary); font-weight: 600; }
+
+.page-title    { font-size: 1.5rem; font-weight: 800; color: var(--text-color); }
+.page-subtitle { font-size: 0.875rem; color: var(--text-color-secondary); }
+
+/* ─── Empty / State Rings ─── */
+.empty-state    { min-height: 55vh; }
+.empty-title    { font-size: 1.25rem; font-weight: 800; color: var(--text-color); }
+
+.empty-ring, .requested-ring {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: var(--primary-light);
+  border: 2px dashed rgba(244, 63, 94, 0.35);
+}
+.success-ring {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: #f0fdf4;
+  border: 2px dashed rgba(22, 163, 74, 0.3);
+}
+.empty-icon { font-size: 3rem; color: var(--text-color-secondary); }
+
+/* ─── Read-Only Cards ─── */
+:host ::ng-deep .lumina-card {
+  border-radius: 20px !important;
+  border: 1px solid var(--surface-border) !important;
+  box-shadow: var(--shadow-sm) !important;
+  overflow: hidden;
+}
+:host ::ng-deep .lumina-card .p-card-body  { padding: 1.25rem 1.5rem !important; }
+:host ::ng-deep .lumina-card .p-card-header { padding: 0 !important; }
+
+.lcard-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--surface-border); }
+.lcard-icon   { font-size: 1.125rem; color: var(--primary-color); }
+.lcard-title  { font-size: 0.9375rem; font-weight: 700; color: var(--text-color); }
+
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.info-label {
+  font-size: 0.6875rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-color-secondary);
+}
+.info-value { font-size: 1.0625rem; font-weight: 700; color: var(--text-color); }
+.info-text  { font-size: 0.9375rem; color: var(--text-color); line-height: 1.6; }
+
+/* ─── Dialog Shell ─── */
+:host ::ng-deep .anamnesis-dialog .p-dialog {
+  border-radius: 24px !important;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.18) !important;
+  border: none !important;
+}
+
+/* Header — rose gradient */
+:host ::ng-deep .anamnesis-dialog .p-dialog-header {
+  background: var(--grad-primary) !important;
+  padding: 22px 28px !important;
+  border-bottom: none !important;
+  color: white !important;
+}
+:host ::ng-deep .anamnesis-dialog .p-dialog-title { display: none !important; }
+:host ::ng-deep .anamnesis-dialog .p-dialog-header .p-button,
+:host ::ng-deep .anamnesis-dialog .p-dialog-header .p-dialog-close-button {
+  color: white !important;
+  opacity: 0.85;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 50% !important;
+
+  &:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.28) !important;
+  }
+}
+
+/* Content & Footer */
+:host ::ng-deep .anamnesis-dialog .p-dialog-content {
+  background: var(--surface-ground) !important;
+  padding: 24px 28px !important;
+}
+:host ::ng-deep .anamnesis-dialog .p-dialog-footer {
+  background: var(--surface-ground) !important;
+  padding: 14px 28px 22px !important;
+  border-top: 1px solid var(--surface-border) !important;
+}
+
+/* ─── Dialog Header Custom Elements ─── */
+.dlg-header   { width: 100%; }
+.dlg-icon-wrap {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.2);
+}
+.dlg-title    { font-size: 1.25rem; font-weight: 800; color: white; }
+.dlg-subtitle { font-size: 0.8125rem; color: rgba(255, 255, 255, 0.85); }
+
+/* ─── Dialog Footer ─── */
+.dlg-footer-hint {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+/* ─── Tabs ─── */
+:host ::ng-deep .anamnesis-tabs .p-tablist {
+  background: var(--surface-card) !important;
+  border-bottom: 2px solid var(--surface-border) !important;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 0 4px;
+}
+:host ::ng-deep .anamnesis-tabs .p-tab {
+  background: transparent !important;
+  color: var(--text-color-secondary) !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
+  margin-bottom: -2px !important;
+  padding: 12px 20px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover { color: var(--primary-color) !important; }
+}
+:host ::ng-deep .anamnesis-tabs .p-tab.p-tab-active,
+:host ::ng-deep .anamnesis-tabs .p-tab[aria-selected="true"] {
+  color: var(--primary-color) !important;
+  border-bottom-color: var(--primary-color) !important;
+  background: transparent !important;
+}
+:host ::ng-deep .anamnesis-tabs .p-tabpanels {
+  background: var(--surface-card) !important;
+  border: 1px solid var(--surface-border) !important;
+  border-top: none !important;
+  border-radius: 0 0 12px 12px !important;
+  padding: 0 !important;
+}
+
+.tab-body { padding: 28px; }
+
+/* ─── Field Labels & Hints ─── */
+.field-group { display: flex; flex-direction: column; }
+
+.field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-color-secondary);
+  margin-bottom: 8px;
+}
+.field-label-icon { font-size: 0.75rem; }
+.field-hint       { font-size: 0.8125rem; color: var(--text-color-secondary); margin: -4px 0 8px; }
+.radio-label      { font-size: 0.9375rem; font-weight: 600; color: var(--text-color); cursor: pointer; }
+
+/* ─── Textarea ─── */
+.field-textarea {
+  width: 100%;
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background-color: var(--surface-section);
+  color: var(--text-color);
+  font-size: 0.9375rem;
+  font-family: var(--font-family);
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12);
+  }
+
+  &::placeholder { color: var(--stone-400); }
+}
+
+/* ─── PrimeNG Select overrides ─── */
+:host ::ng-deep .anamnesis-dialog .p-select {
+  background: var(--surface-section) !important;
+  border: 1px solid var(--surface-border) !important;
+  border-radius: 12px !important;
+  color: var(--text-color) !important;
+  width: 100% !important;
+}
+:host ::ng-deep .anamnesis-dialog .p-select .p-select-label {
+  color: var(--text-color) !important;
+}
+:host ::ng-deep .anamnesis-dialog .p-select.p-focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.12) !important;
+}
+
+/* ─── RadioButton ─── */
+:host ::ng-deep .anamnesis-dialog .p-radiobutton .p-radiobutton-box {
+  background: var(--surface-section) !important;
+  border: 2px solid var(--stone-300) !important;
+  border-radius: 50% !important;
+}
+:host ::ng-deep .anamnesis-dialog .p-radiobutton.p-highlight .p-radiobutton-box,
+:host ::ng-deep .anamnesis-dialog .p-radiobutton-checked .p-radiobutton-box {
+  border-color: var(--primary-color) !important;
+  background: var(--primary-color) !important;
+}
+:host ::ng-deep .anamnesis-dialog .p-radiobutton .p-radiobutton-icon {
+  background: white !important;
+}
+
+/* ─── Primary Button ─── */
+:host ::ng-deep .btn-lumina-primary.p-button {
+  background: var(--grad-primary) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25) !important;
+  transition: all 0.2s !important;
+
+  &:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 18px rgba(244, 63, 94, 0.38) !important;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
